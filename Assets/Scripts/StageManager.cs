@@ -1,15 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class StageManager : MonoBehaviour
 {
-    // Open a Stage scene from the Adventure scene
-    public void StartStage()
+    public Boundary boundary;
+    public TMP_Text scoreText;
+    private int scoreValue = 0;
+    // Start is called before the first frame update
+    void Start()
     {
-        // TODO: add argument for stage details
-        // called onClick StageButton in Adventure menu
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        // TODO
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        int newScore = this.boundary.GetScore();
+        if (this.scoreValue != newScore)
+        {
+            this.scoreValue = newScore;
+            this.scoreText.text = string.Format("Score: {0}", scoreValue);
+        }
+
     }
 }
