@@ -1,6 +1,6 @@
 ﻿public class UserManager
 {
-    public UserData userData;
+    private UserData userData;
 
     public UserData GetUserData()
     {

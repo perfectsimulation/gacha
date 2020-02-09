@@ -54,6 +54,9 @@ public class MainMenu : MonoBehaviour
             string password = this.PasswordInput.text;
             StartCoroutine(this.networkManager.LoginUser(username, password));
         }
+
+        // After setting the user data for this session, begin Adventure
+        this.StartAdventure();
     }
 
     // Open the Adventure scene from the Main scene
@@ -76,6 +79,14 @@ public class MainMenu : MonoBehaviour
         this.UsernameInput.gameObject.SetActive(showOrHide);
         this.PasswordInput.gameObject.SetActive(showOrHide);
         this.SubmitButton.gameObject.SetActive(showOrHide);
+        if (showOrHide && this.isNewUser)
+        {
+            this.SubmitButton.GetComponentInChildren<TextMeshProUGUI>().text = "Sign up";
+        }
+        else if (showOrHide)
+        {
+            this.SubmitButton.GetComponentInChildren<TextMeshProUGUI>().text = "Login";
+        }
     }
 
 }
