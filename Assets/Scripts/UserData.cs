@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 [Serializable]
 public class UserData
 {
+    public string username;
     public int playerLevel = 0;
-    public ProgressTree tree = new ProgressTree();
+    public ProgressTree progress = new ProgressTree();
 
     public void Init()
     {
@@ -18,6 +18,11 @@ public class UserData
         UserData userData = new UserData();
         userData.Init();
         return userData;
+    }
+
+    public void SetUsername(string username)
+    {
+        this.username = username;
     }
 
 }

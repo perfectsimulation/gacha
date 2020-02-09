@@ -1,33 +1,38 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
-
-public class UserManager
+﻿public class UserManager
 {
-    private UserData GetUserData()
+    public UserData userData;
+
+    public UserData GetUserData()
     {
-        // Search database for user
-        
-        // No user found, so create a new user
-        UserData newUserData = UserData.CreateNewInstance();
-        // POST the user data to database
-        return newUserData;
+        if (this.userData == null)
+        {
+            // No user found, so create a new user
+            UserData newUserData = UserData.CreateNewInstance();
+            this.userData = newUserData;
+        }
+        return this.userData;
     }
 
-    public int GetCurrentLevel()
+    // Called after user data has been retrieved from database
+    public void SetUserData(string json)
     {
-        UserData userData = this.GetUserData();
-        // Parse userData for the first false element in adventureCompletion
-        return 0;
+        UserData data = this.DeserializeUserData(json);
+        this.userData = data;
     }
 
-    public int GetCurrentStage()
+    // Turn UserData into JSON
+    public string SerializeUserData(UserData data)
     {
-        UserData userData = this.GetUserData();
-        // Get current level
-        int level = this.GetCurrentLevel();
-        // Parse userData for the first false element in levelCompletion[level]
-        return 0;
+        UserData[] dataArray = new UserData[] { data };
+        string json = JsonHelper.ToJson(dataArray);
+        return json;
     }
+
+    // Turn JSON into UserData
+    public UserData DeserializeUserData(string json)
+    {
+        UserData[] data = JsonHelper.FromJson<UserData>(json);
+        return data[0];
+    }
+
 }

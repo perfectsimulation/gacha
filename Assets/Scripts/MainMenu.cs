@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,11 +12,13 @@ public class MainMenu : MonoBehaviour
     public Button SubmitButton;
     private bool isNewUser = true;
 
+    private UserManager userManager;
     private NetworkManager networkManager;
 
     private void Start()
     {
         this.ShowLoginInputs(false);
+        this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
         this.networkManager = ModelLocator.GetModelInstance<NetworkManager>() as NetworkManager;
     }
 
@@ -38,10 +38,21 @@ public class MainMenu : MonoBehaviour
 
     public void Submit()
     {
-        // New user
         if (this.isNewUser)
         {
-            StartCoroutine(this.networkManager.RegisterNewUser(this.UsernameInput.text, this.PasswordInput.text));
+            // Create and add new user to database
+            string username = this.UsernameInput.text;
+            string password = this.PasswordInput.text;
+            userManager.GetUserData().SetUsername(username);
+            string progress = this.userManager.SerializeUserData(this.userManager.GetUserData());
+            StartCoroutine(this.networkManager.RegisterNewUser(username, password, progress));
+        }
+        else
+        {
+            // Login using provided credentials
+            string username = this.UsernameInput.text;
+            string password = this.PasswordInput.text;
+            StartCoroutine(this.networkManager.LoginUser(username, password));
         }
     }
 
