@@ -7,17 +7,21 @@ public class Boundary : MonoBehaviour
     private BoxCollider boxCollider;
     private List<BoxCollider> intersectingNotes = new List<BoxCollider>();
     private int scoreValue = 0;
-    // Start is called before the first frame update
+
+    private StageManager stageManager;
+
     void Start()
     {
         // Cache the collider
         this.boxCollider = this.GetComponent<BoxCollider>();
+
+        // Cache the stage manager
+        this.stageManager = ModelLocator.GetModelInstance<StageManager>() as StageManager;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // TODO: register user touch input
+        // TODO: register user multi-touch input
         if (Input.touchCount > 0)
         {
             Ray ray = this.mainCamera.ScreenPointToRay(Input.touches[0].position);
@@ -33,6 +37,7 @@ public class Boundary : MonoBehaviour
                         // The touch intersects a Note that is currently colliding with the Boundary
                         // Increase score while touch is held down and intersects both Boundary and Note
                         this.scoreValue++;
+                        this.stageManager.SetScore(this.scoreValue);
                     }
                 }
             }
@@ -57,9 +62,4 @@ public class Boundary : MonoBehaviour
         this.intersectingNotes.Remove(other.gameObject.GetComponent<BoxCollider>());
     }
 
-    // Return score value
-    public int GetScore()
-    {
-        return this.scoreValue;
-    }
 }

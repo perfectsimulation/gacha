@@ -1,26 +1,73 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine.SceneManagement;
 
-public class StageManager : MonoBehaviour
+public class StageManager
 {
-    public Boundary boundary;
-    public TMP_Text scoreText;
-    private int scoreValue = 0;
-    // Start is called before the first frame update
-    void Start()
-    {
-        // TODO
-    }
+    private StageData stageData;
+    private int score;
 
-    // Update is called once per frame
-    void Update()
+    public StageData GetStageData()
     {
-        int newScore = this.boundary.GetScore();
-        if (this.scoreValue != newScore)
+        if (this.stageData == null)
         {
-            this.scoreValue = newScore;
-            this.scoreText.text = string.Format("Score: {0}", scoreValue);
+            // No user found, so create a new user
+            StageData newStageData = new StageData();
+            this.stageData = newStageData;
         }
-
+        return this.stageData;
     }
+
+    // Called after user data has been retrieved from database
+    public void SetStageData(string json)
+    {
+        StageData data = this.DeserializeStageData(json);
+        this.stageData = data;
+        // Switch to the Stage scene now that stage data has been loaded
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public void ClearStage()
+    {
+        this.stageData = null;
+    }
+
+    public void SetScore(int score)
+    {
+        this.score = score;
+    }
+
+    public int GetScore()
+    {
+        return this.score;
+    }
+
+    // Turn StageData into JSON
+    public string SerializeStageData(StageData data)
+    {
+        StageData[] dataArray = new StageData[] { data };
+        string json = JsonHelper.ToJson(dataArray);
+        return json;
+    }
+
+    // Turn JSON into StageData
+    public StageData DeserializeStageData(string json)
+    {
+        StageData[] data = JsonHelper.FromJson<StageData>(json);
+        return data[0];
+    }
+
+    // Turn NoteData into JSON
+    public string SerializeNoteData(NoteData[] data)
+    {
+        NoteData[] dataArray = data;
+        string json = JsonHelper.ToJson(dataArray);
+        return json;
+    }
+
+    // Turn JSON into NoteData
+    public NoteData DeserializeNoteData(string json)
+    {
+        NoteData[] data = JsonHelper.FromJson<NoteData>(json);
+        return data[0];
+    }
+
 }

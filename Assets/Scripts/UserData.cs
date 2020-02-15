@@ -113,7 +113,7 @@ public class Node
     public bool isComplete = false;
     public int score = 0;
     public List<string> childrenIDs = new List<string>();
-    public Node(){}
+    public Node() { }
     public Node(int level, int stage, List<string> childrenIDs)
     {
         this.level = level;
