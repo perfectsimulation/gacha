@@ -32,8 +32,8 @@ public class NetworkManager
 
             // Set user data for this session
             UserManager userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
-            string progressJson = www.downloadHandler.text.Split('\t')[1];
-            userManager.SetUserData(progressJson);
+            string[] response = www.downloadHandler.text.Split('\t');
+            userManager.SetUserData(response);
         }
         else
         {
@@ -62,8 +62,8 @@ public class NetworkManager
 
             // Set user data for this session
             UserManager userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
-            string progressJson = www.downloadHandler.text.Split('\t')[1];
-            userManager.SetUserData(progressJson);
+            string[] response = www.downloadHandler.text.Split('\t');
+            userManager.SetUserData(response);
         }
         else
         {

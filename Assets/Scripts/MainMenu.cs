@@ -44,6 +44,8 @@ public class MainMenu : MonoBehaviour
             string username = this.UsernameInput.text;
             string password = this.PasswordInput.text;
             userManager.GetUserData().SetUsername(username);
+            CardData[] card = new CardData[] { new CardData() };
+            userManager.GetUserData().SetCardData(card);
             string progress = this.userManager.SerializeUserData(this.userManager.GetUserData());
             StartCoroutine(this.networkManager.RegisterNewUser(username, password, progress));
         }

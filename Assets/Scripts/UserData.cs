@@ -7,6 +7,7 @@ public class UserData
     public string username;
     public int playerLevel = 0;
     public ProgressTree progress = new ProgressTree();
+    public CardData[] cards;
 
     public void Init()
     {
@@ -23,6 +24,11 @@ public class UserData
     public void SetUsername(string username)
     {
         this.username = username;
+    }
+
+    public void SetCardData(CardData[] cardData)
+    {
+        this.cards = cardData;
     }
 
     public int GetCurrentLevel()
@@ -113,7 +119,9 @@ public class Node
     public bool isComplete = false;
     public int score = 0;
     public List<string> childrenIDs = new List<string>();
+
     public Node() { }
+
     public Node(int level, int stage, List<string> childrenIDs)
     {
         this.level = level;
