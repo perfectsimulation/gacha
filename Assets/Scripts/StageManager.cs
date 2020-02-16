@@ -1,9 +1,7 @@
-﻿using UnityEngine.SceneManagement;
-
-public class StageManager
+﻿public class StageManager
 {
     private StageData stageData;
-    private int score;
+    private float score;
 
     public StageData GetStageData()
     {
@@ -23,18 +21,18 @@ public class StageManager
         string responseLevel = response[1];
         string responseStage = response[2];
         string responseScoreTier = response[3];
-        string responseNotes = response[4];
+        string responseCardBonus = response[4];
+        string responseNotes = response[5];
 
         int level = int.Parse(responseLevel);
         int stage = int.Parse(responseStage);
         int[] scoreTier = JsonHelper.FromJson<int>(responseScoreTier);
+        CardBonus[] cardBonus = JsonHelper.FromJson<CardBonus>(responseCardBonus);
         NoteData[] notes = JsonHelper.FromJson<NoteData>(responseNotes);
 
         // Construct and set StageData from response
-        StageData data = new StageData(level, stage, scoreTier, notes);
+        StageData data = new StageData(level, stage, scoreTier, cardBonus[0], notes);
         this.stageData = data;
-        // Switch to the Stage scene now that stage data has been loaded
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void ClearStage()
@@ -42,12 +40,12 @@ public class StageManager
         this.stageData = null;
     }
 
-    public void SetScore(int score)
+    public void SetScore(float score)
     {
         this.score = score;
     }
 
-    public int GetScore()
+    public float GetScore()
     {
         return this.score;
     }

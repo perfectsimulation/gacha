@@ -9,6 +9,8 @@ public class UserData
     public ProgressTree progress = new ProgressTree();
     public CardData[] cards;
 
+    private CardData selectedCard;
+
     public void Init()
     {
         // TODO
@@ -29,6 +31,17 @@ public class UserData
     public void SetCardData(CardData[] cardData)
     {
         this.cards = cardData;
+    }
+
+    public void SetSelectedCardData(CardData cardData)
+    {
+        this.selectedCard = cardData;
+    }
+
+    public CardData GetSelectedCardData()
+    {
+        return this.selectedCard;
+        // TODO error handle when selectedCard is null
     }
 
     public int GetCurrentLevel()

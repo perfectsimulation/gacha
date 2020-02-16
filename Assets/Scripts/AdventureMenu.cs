@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class AdventureManager : MonoBehaviour
+public class AdventureMenu : MonoBehaviour
 {
-    public TextMeshProUGUI title;
+    public TextMeshProUGUI Title;
     public GameObject RootPosition;
+    public GameObject CardSelectOverlay;
+    public GameObject SelectedCard;
+    public GameObject StageDescription;
+    public GameObject CardList;
 
     private UserManager userManager;
     private NetworkManager networkManager;
@@ -24,6 +29,7 @@ public class AdventureManager : MonoBehaviour
         this.currentStage = this.userManager.GetUserData().GetCurrentStage();
 
         this.SetTitle();
+        this.ShowCardSelectOverlay(false);
         this.LayoutMenuWithStageButtons();
 
         // TODO: stage creation script
@@ -44,30 +50,68 @@ public class AdventureManager : MonoBehaviour
         //    new NoteData(2, 16, 2),
         //};
         //int[] scoreTier = new int[] { 100, 200, 300 };
-        //StartCoroutine(this.networkManager.SaveStage(new StageData(0, 0, scoreTier, notes00)));
-        //StartCoroutine(this.networkManager.SaveStage(new StageData(0, 1, scoreTier, notes01)));
+        //CardBonus cardBonus00 = new CardBonus(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f);
+        //CardBonus cardBonus01 = new CardBonus(0.65f, 0.55f, 0.45f, 0.35f, 0.45f, 0.55f, 0.65f);
+        //StartCoroutine(this.networkManager.SaveStage(new StageData(0, 0, scoreTier, cardBonus00, notes00)));
+        //StartCoroutine(this.networkManager.SaveStage(new StageData(0, 1, scoreTier, cardBonus01, notes01)));
     }
 
     // Load stage data from database
-    public void StartStage(int stage)
+    public void SelectStage(int stage)
     {
         // TODO: add argument for stage details
         // called onClick of a Stage Button
         Debug.Log(stage);
-        StartCoroutine(LoadStage(stage));
+        StartCoroutine(this.LoadStage(stage));
+    }
+
+    // Show Card List
+    public void ShowCardList()
+    {
+        this.CardList.SetActive(true);
+        this.CardList.GetComponent<CardList>().LayoutAvailableCards();
+    }
+
+    // Confirm card selection for stage
+    public void ConfirmCardSelection()
+    {
+        // Add selected card data to user data
+        CardData cardData = this.CardList.GetComponent<CardList>().GetSelectedCardData();
+        this.userManager.GetUserData().SetSelectedCardData(cardData);
+
+        // Dismiss card list
+        this.CardList.SetActive(false);
+
+        // Show selected card data detail in this.SelectedCard
+        StartCoroutine(this.SelectedCard.GetComponent<SelectedCard>().ShowSelectedCardDetail(cardData));
+        Debug.Log("confirm card");
+    }
+
+    public void StartStage()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     // Ask the network manager for stage data for the current level and the selected stage
     private IEnumerator LoadStage(int stage)
     {
         yield return StartCoroutine(this.networkManager.LoadStage(this.currentLevel, stage));
+        this.ShowCardSelectOverlay(true);
     }
 
     // Set text of title above Stage Buttons
     private void SetTitle()
     {
         string text = string.Format("Level {0}", this.currentLevel);
-        this.title.text = text;
+        this.Title.text = text;
+    }
+
+    private void ShowCardSelectOverlay(bool show)
+    {
+        this.CardSelectOverlay.SetActive(show);
+        this.SelectedCard.SetActive(show);
+        this.StageDescription.SetActive(show);
+        this.CardList.SetActive(false);
     }
 
     // Populate the Adventure menu with Stage buttons using user data
@@ -85,7 +129,7 @@ public class AdventureManager : MonoBehaviour
             Button stageButton = stageObject.AddComponent<Button>();
 
             int j = i; // Delegate argument for onClick listener StartStage()
-            stageButton.onClick.AddListener(delegate { this.StartStage(j); });
+            stageButton.onClick.AddListener(delegate { this.SelectStage(j); });
             stageButton.interactable = i <= this.currentStage;
 
             // Set button label text

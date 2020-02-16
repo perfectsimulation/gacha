@@ -43,8 +43,14 @@ public class MainMenu : MonoBehaviour
             // Create and add new user to database
             string username = this.UsernameInput.text;
             string password = this.PasswordInput.text;
+            // TODO: remove placeholder starter cards
+            string bigRedUrl = "https://i1.pngguru.com/preview/672/751/586/vulpix-sprite-orange-animal-pixel-screenshot-png-clipart.jpg";
+            string jungleBoiUrl = "https://library.kissclipart.com/20181130/ztw/kissclipart-scyther-pokemon-clipart-pokmon-firered-and-leafg-951e6c8cd55db39f.jpg";
             userManager.GetUserData().SetUsername(username);
-            CardData[] card = new CardData[] { new CardData() };
+            CardData[] card = new CardData[] {
+                new CardData("big red", bigRedUrl, 80, 10, 14, 0, 0, 1, 20),
+                new CardData("jungle boi", jungleBoiUrl, 10, 20, 30, 40, 25, 4, 0)
+            };
             userManager.GetUserData().SetCardData(card);
             string progress = this.userManager.SerializeUserData(this.userManager.GetUserData());
             StartCoroutine(this.networkManager.RegisterNewUser(username, password, progress));

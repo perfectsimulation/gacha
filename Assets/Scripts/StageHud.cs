@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 public class StageHud : MonoBehaviour
@@ -8,7 +6,7 @@ public class StageHud : MonoBehaviour
     public TextMeshProUGUI ScoreText;
 
     private StageManager stageManager;
-    private int score;
+    private float score;
 
     void Start()
     {
@@ -17,7 +15,7 @@ public class StageHud : MonoBehaviour
 
     void Update()
     {
-        int newScore = this.stageManager.GetScore();
+        float newScore = this.stageManager.GetScore();
         if (this.score != newScore)
         {
             this.score = newScore;

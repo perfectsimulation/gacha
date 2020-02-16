@@ -110,6 +110,8 @@ public class NetworkManager
         string level = stageData.level.ToString();
         string stage = stageData.stage.ToString();
         string scoreTier = JsonHelper.ToJson<int>(stageData.scoreTier);
+        CardBonus[] cardBonusForJson = new CardBonus[] { stageData.cardBonus };
+        string cardBonus = JsonHelper.ToJson<CardBonus>(cardBonusForJson);
         string notesJson = stageManager.SerializeNoteData(stageData.notes);
 
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>
@@ -118,6 +120,7 @@ public class NetworkManager
             new MultipartFormDataSection("level", level),
             new MultipartFormDataSection("stage", stage),
             new MultipartFormDataSection("scoreTier", scoreTier),
+            new MultipartFormDataSection("cardBonus", cardBonus),
             new MultipartFormDataSection("notes", notesJson)
         };
 
@@ -129,8 +132,6 @@ public class NetworkManager
         {
             // No errors hitting the database
             Debug.Log("Stage data saved successfully");
-            string stageJson = www.downloadHandler.text.Split('\t')[1];
-            Debug.Log(stageJson);
         }
         else
         {
