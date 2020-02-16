@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Stanza : MonoBehaviour
 {
@@ -9,13 +8,21 @@ public class Stanza : MonoBehaviour
 
     void Awake()
     {
-        // Get Stage layout from database
+        // Stage data has been loaded and cached in StageManager
         this.stageManager = ModelLocator.GetModelInstance<StageManager>() as StageManager;
-        this.BuildStanza(this.stageManager.GetStageData().notes);
+        this.BuildStanza(this.stageManager.GetStageData());
     }
 
-    private void BuildStanza(NoteData[] notes)
+    // Layout the stage by instantiating Note prefabs from NoteData
+    private void BuildStanza(StageData stageData)
     {
         // Create a Note prefab for each NoteData
+        NoteData[] notes = stageData.notes;
+        foreach (NoteData noteData in notes)
+        {
+            GameObject notePrefab = Instantiate(this.NotePrefab);
+            Note noteComponent = notePrefab.GetComponent<Note>();
+            noteComponent.SetPositionAndScale(noteData.xPosition, noteData.zPosition, noteData.zScale);
+        }
     }
 }

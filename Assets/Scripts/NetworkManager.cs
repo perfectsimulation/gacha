@@ -92,8 +92,8 @@ public class NetworkManager
 
             // Set stage data
             StageManager stageManager = ModelLocator.GetModelInstance<StageManager>() as StageManager;
-            string stageJson = www.downloadHandler.text.Split('\t')[1];
-            stageManager.SetStageData(stageJson);
+            string[] response = www.downloadHandler.text.Split('\t');
+            stageManager.SetStageData(response);
         }
         else
         {
@@ -109,12 +109,15 @@ public class NetworkManager
         string id = string.Format("{0}-{1}", stageData.level, stageData.stage);
         string level = stageData.level.ToString();
         string stage = stageData.stage.ToString();
+        string scoreTier = JsonHelper.ToJson<int>(stageData.scoreTier);
         string notesJson = stageManager.SerializeNoteData(stageData.notes);
+
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>
         {
             new MultipartFormDataSection("id", id),
             new MultipartFormDataSection("level", level),
             new MultipartFormDataSection("stage", stage),
+            new MultipartFormDataSection("scoreTier", scoreTier),
             new MultipartFormDataSection("notes", notesJson)
         };
 

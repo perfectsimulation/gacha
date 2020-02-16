@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 [Serializable]
 public class StageData
@@ -7,13 +6,15 @@ public class StageData
     public string id;
     public int level;
     public int stage;
+    public int[] scoreTier;
     public NoteData[] notes;
     public StageData() { }
-    public StageData(int level, int stage, NoteData[] notes)
+    public StageData(int level, int stage, int[] scoreTier, NoteData[] notes)
     {
         this.id = string.Format("{0}-{1}", level, stage);
         this.level = level;
         this.stage = stage;
+        this.scoreTier = scoreTier;
         this.notes = notes;
     }
 }

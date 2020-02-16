@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class AdventureManager : MonoBehaviour
@@ -44,8 +43,9 @@ public class AdventureManager : MonoBehaviour
         //    new NoteData(4, 14, 2),
         //    new NoteData(2, 16, 2),
         //};
-        //StartCoroutine(this.networkManager.SaveStage(new StageData(0, 0, notes00)));
-        //StartCoroutine(this.networkManager.SaveStage(new StageData(0, 1, notes01)));
+        //int[] scoreTier = new int[] { 100, 200, 300 };
+        //StartCoroutine(this.networkManager.SaveStage(new StageData(0, 0, scoreTier, notes00)));
+        //StartCoroutine(this.networkManager.SaveStage(new StageData(0, 1, scoreTier, notes01)));
     }
 
     // Load stage data from database

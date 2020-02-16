@@ -17,9 +17,21 @@ public class StageManager
     }
 
     // Called after user data has been retrieved from database
-    public void SetStageData(string json)
+    public void SetStageData(string[] response)
     {
-        StageData data = this.DeserializeStageData(json);
+        // Parse GET stage data response
+        string responseLevel = response[1];
+        string responseStage = response[2];
+        string responseScoreTier = response[3];
+        string responseNotes = response[4];
+
+        int level = int.Parse(responseLevel);
+        int stage = int.Parse(responseStage);
+        int[] scoreTier = JsonHelper.FromJson<int>(responseScoreTier);
+        NoteData[] notes = JsonHelper.FromJson<NoteData>(responseNotes);
+
+        // Construct and set StageData from response
+        StageData data = new StageData(level, stage, scoreTier, notes);
         this.stageData = data;
         // Switch to the Stage scene now that stage data has been loaded
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
