@@ -20,11 +20,6 @@
         this.userData = data;
     }
 
-    public CardData[] GetUserCards()
-    {
-        return this.GetUserData().cards;
-    }
-
     // Turn UserData into JSON
     public string SerializeUserData(UserData data)
     {

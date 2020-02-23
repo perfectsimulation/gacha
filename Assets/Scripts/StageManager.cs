@@ -48,6 +48,10 @@ public class StageManager
     public void ClearStage()
     {
         this.stageData = null;
+        this.score = 0f;
+        this.isCountdownComplete = false;
+        this.isStageOver = false;
+        this.droppedItems = new ItemData[] { };
     }
 
     public void SetScore(float score)

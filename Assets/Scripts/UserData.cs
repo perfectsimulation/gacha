@@ -34,6 +34,11 @@ public class UserData
         this.cards = cardData;
     }
 
+    public CardData[] GetUserCards()
+    {
+        return this.cards;
+    }
+
     public void SetSelectedCardData(CardData cardData)
     {
         this.selectedCard = cardData;

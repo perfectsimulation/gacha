@@ -83,23 +83,23 @@ public class MainMenu : MonoBehaviour
     }
 
     // Show/Hide Login and Create User buttons
-    void ShowLoginButtons(bool showOrHide)
+    void ShowLoginButtons(bool shouldShow)
     {
-        this.LoginButton.gameObject.SetActive(showOrHide);
-        this.CreateUserButton.gameObject.SetActive(showOrHide);
+        this.LoginButton.gameObject.SetActive(shouldShow);
+        this.CreateUserButton.gameObject.SetActive(shouldShow);
     }
 
     // Show/Hide Username and Password input fields and Submit button
-    void ShowLoginInputs(bool showOrHide)
+    void ShowLoginInputs(bool shouldShow)
     {
-        this.UsernameInput.gameObject.SetActive(showOrHide);
-        this.PasswordInput.gameObject.SetActive(showOrHide);
-        this.SubmitButton.gameObject.SetActive(showOrHide);
-        if (showOrHide && this.isNewUser)
+        this.UsernameInput.gameObject.SetActive(shouldShow);
+        this.PasswordInput.gameObject.SetActive(shouldShow);
+        this.SubmitButton.gameObject.SetActive(shouldShow);
+        if (shouldShow && this.isNewUser)
         {
             this.SubmitButton.GetComponentInChildren<TextMeshProUGUI>().text = "Sign up";
         }
-        else if (showOrHide)
+        else if (shouldShow)
         {
             this.SubmitButton.GetComponentInChildren<TextMeshProUGUI>().text = "Login";
         }

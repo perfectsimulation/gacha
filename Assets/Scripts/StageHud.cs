@@ -11,6 +11,7 @@ public class StageHud : MonoBehaviour
 
     private UserManager userManager;
     private StageManager stageManager;
+    private NetworkManager networkManager;
 
     private TextMeshProUGUI countdownText;
 
@@ -20,9 +21,10 @@ public class StageHud : MonoBehaviour
 
     void Start()
     {
-        // Cache the user and stage managers
+        // Cache the user, stage, and network managers
         this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
         this.stageManager = ModelLocator.GetModelInstance<StageManager>() as StageManager;
+        this.networkManager = ModelLocator.GetModelInstance<NetworkManager>() as NetworkManager;
 
         // Show stage start countdown overlay
         this.ShowCountdownOverlay();
@@ -64,6 +66,18 @@ public class StageHud : MonoBehaviour
 
     public void EndStage()
     {
+        StartCoroutine(SaveAndExitStage());
+    }
+
+    private IEnumerator SaveAndExitStage()
+    {
+        // Save progress with network manager
+        yield return StartCoroutine(this.networkManager.UpdateUserData(this.userManager.GetUserData()));
+
+        // Tell stage manager to clear current stage data
+        this.stageManager.ClearStage();
+
+        // Load Adventure scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 

@@ -68,6 +68,12 @@ public class TouchBoundary : MonoBehaviour
     // Calculate score multiplier bonus from selected card
     private float CalculateScoreMultiplier(CardData cardData)
     {
+        // No score multiplier if no card was selected
+        if (cardData == null)
+        {
+            return 1f;
+        }
+
         CardBonus cardBonus = this.stageData.cardBonus;
         float waterBonus = cardData.waterAffinity * (1f + cardBonus.waterX);
         float airBonus = cardData.airAffinity * (1f + cardBonus.airX);

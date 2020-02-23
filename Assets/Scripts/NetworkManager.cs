@@ -7,17 +7,18 @@ public class NetworkManager
 {
     public string registerUrl = "http://localhost/gacha-unity/register.php";
     public string loginUrl = "http://localhost/gacha-unity/login.php";
+    public string updateUserUrl = "http://localhost/gacha-unity/updateUser.php";
     public string stageUrl = "http://localhost/gacha-unity/stage.php";
     public string saveStageUrl = "http://localhost/gacha-unity/saveStage.php";
 
     // POST input field values for User Creation
-    public IEnumerator RegisterNewUser(string username, string password, string progress)
+    public IEnumerator RegisterNewUser(string username, string password, string data)
     {
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>
         {
             new MultipartFormDataSection("username", username),
             new MultipartFormDataSection("password", password),
-            new MultipartFormDataSection("progress", progress)
+            new MultipartFormDataSection("data", data)
         };
 
         // TODO: implement environments
@@ -69,6 +70,34 @@ public class NetworkManager
         {
             // Error logging in user
             Debug.Log("User login failed with error: " + www.downloadHandler.text);
+        }
+    }
+
+    // POST updated user data
+    public IEnumerator UpdateUserData(UserData userData)
+    {
+        string username = userData.username;
+        string data = JsonHelper.ToJson<UserData>(new UserData[] { userData });
+
+        List<IMultipartFormSection> formData = new List<IMultipartFormSection>
+        {
+            new MultipartFormDataSection("username", username),
+            new MultipartFormDataSection("data", data)
+        };
+
+        UnityWebRequest www = UnityWebRequest.Post(this.updateUserUrl, formData);
+        yield return www.SendWebRequest();
+
+        // Handle errors
+        if (www.downloadHandler.text[0].ToString() == "0")
+        {
+            // No errors hitting the database
+            Debug.Log("User updated successfully");
+        }
+        else
+        {
+            // Error updating user
+            Debug.Log("User update failed with error: " + www.downloadHandler.text);
         }
     }
 

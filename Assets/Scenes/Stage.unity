@@ -701,8 +701,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 831981495}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: 90}
-  m_LocalScale: {x: 10, y: 6, z: 0.1}
+  m_LocalPosition: {x: 0, y: 4, z: 88.75}
+  m_LocalScale: {x: 10, y: 6, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1295577372}
   m_RootOrder: 2
@@ -718,7 +718,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 1, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &831981498
 MonoBehaviour:
@@ -1421,7 +1421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 1494651302}
-  mainCameraSpeed: 0.1
+  mainCameraSpeed: 0.7
 --- !u!1 &1718915538
 GameObject:
   m_ObjectHideFlags: 0

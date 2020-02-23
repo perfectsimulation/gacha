@@ -16,7 +16,7 @@ public class CardList : MonoBehaviour
     {
         // Cache the stage manager
         this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
-        this.cards = this.userManager.GetUserCards();
+        this.cards = this.userManager.GetUserData().GetUserCards();
         this.ConfirmButton.interactable = false;
     }
 
