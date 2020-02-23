@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-[Serializable]
 public class UserData
 {
     public string username;
     public int playerLevel = 0;
-    public ProgressTree progress = new ProgressTree();
-    public CardData[] cards;
-    public ItemData[] items = new ItemData[] { };
+    public Progress progress = new Progress();
+    public List<CardData> cards;
+    public List<ItemData> items = new List<ItemData>();
 
     private CardData selectedCard;
 
@@ -19,9 +18,22 @@ public class UserData
 
     public static UserData CreateNewInstance()
     {
-        UserData userData = new UserData();
-        userData.Init();
+        UserData userData = DataInitializer.CreateUser();
         return userData;
+    }
+
+    public static UserData Deserialize(string serializedData)
+    {
+        UserData userData = CreateNewInstance();
+        return userData;
+    }
+
+    public override string ToString()
+    {
+        // Prepare properties for serialization
+        SerializedUserData serialized = new SerializedUserData(this);
+        string s = JsonHelper.ToJson<SerializedUserData>(serialized);
+        return s;
     }
 
     public void SetUsername(string username)
@@ -29,12 +41,12 @@ public class UserData
         this.username = username;
     }
 
-    public void SetCardData(CardData[] cardData)
+    public void SetCardData(List<CardData> cardData)
     {
         this.cards = cardData;
     }
 
-    public CardData[] GetUserCards()
+    public List<CardData> GetUserCards()
     {
         return this.cards;
     }
@@ -53,13 +65,24 @@ public class UserData
     public int GetCurrentLevel()
     {
         Node currentNode = this.FindFirstIncompleteNode();
-        return currentNode.level;
+        return currentNode.stageData.level;
     }
 
     public int GetCurrentStage()
     {
         Node currentNode = this.FindFirstIncompleteNode();
-        return currentNode.stage;
+        return currentNode.stageData.stage;
+    }
+
+    public Node GetNodeById(int level, int stage)
+    {
+        string id = string.Format("{0}-{1}", level, stage);
+        foreach (Node node in this.progress.nodes)
+        {
+            if (node.id == id)
+                return node;
+        }
+        return new Node();
     }
 
     // Return all Nodes with the specified level
@@ -68,7 +91,7 @@ public class UserData
         List<Node> stages = new List<Node>();
         foreach (Node n in this.progress.nodes)
         {
-            if (n.level == level)
+            if (n.stageData.level == level)
             {
                 stages.Add(n);
             }
@@ -76,7 +99,7 @@ public class UserData
         return stages;
     }
 
-    public void AddItemsToInventory(ItemData[] items)
+    public void AddItemsToInventory(List<ItemData> items)
     {
         // Add each new item to inventory
         foreach (ItemData item in items)
@@ -89,7 +112,7 @@ public class UserData
             else
             {
                 // User does not have any of this item yet, so add it to user's inventory
-                this.AddNewItemToInventory(item);
+                this.items.Add(item);
             }
         }
     }
@@ -99,7 +122,7 @@ public class UserData
         // Go through each Node to find the first one with isComplete = false
         foreach (Node n in this.progress.nodes)
         {
-            if (n.isComplete == false)
+            if (n.metaData.isComplete == false)
             {
                 return n;
             }
@@ -122,88 +145,86 @@ public class UserData
 
     private void IncrementItemQuantity(ItemData itemData)
     {
-        for (int i = 0; i < this.items.Length; i++)
+        foreach (ItemData item in this.items)
         {
-            if (this.items[i].id == itemData.id)
+            if (item.id == itemData.id)
             {
-                this.items[i].IncreaseQuantity(itemData.quantity);
+                item.IncreaseQuantity(itemData.quantity);
                 return;
             }
         }
 
     }
 
-    private void AddNewItemToInventory(ItemData itemData)
-    {
-        // Create a new ItemData array that is one unit longer than the current inventory
-        ItemData[] newInventory = new ItemData[this.items.Length + 1];
-
-        // Set the first element of the new inventory as the new item
-        newInventory[0] = itemData;
-
-        // Copy the old inventory into the new one
-        this.items.CopyTo(newInventory, 1);
-
-        // Set this inventory to the new inventory
-        this.items = newInventory;
-    }
 }
 
 [Serializable]
-public class ProgressTree
+public class Progress
 {
     public List<Node> nodes = new List<Node>();
-    public ProgressTree()
+
+    public Progress() { }
+
+    public void AddNode(Node node)
     {
-        // TODO: construct the real, fresh, new progress tree - for now just placeholder
-        Node level0stage7 = new Node(0, 7, new List<string>());
-        Node level0stage6 = new Node(0, 6, new List<string>() { level0stage7.id });
-        Node level0stage5 = new Node(0, 5, new List<string>() { level0stage6.id });
-        Node level0stage4 = new Node(0, 4, new List<string>() { level0stage5.id });
-        Node level0stage3 = new Node(0, 3, new List<string>() { level0stage4.id });
-        Node level0stage2 = new Node(0, 2, new List<string>() { level0stage3.id });
-        Node level0stage1 = new Node(0, 1, new List<string>() { level0stage2.id });
-        Node level0stage0 = new Node(0, 0, new List<string>() { level0stage1.id });
-
-        Node level1stage4 = new Node(1, 4, new List<string>());
-        Node level1stage3 = new Node(1, 3, new List<string>() { level1stage4.id });
-        Node level1stage2 = new Node(1, 2, new List<string>() { level1stage3.id });
-        Node level1stage1 = new Node(1, 1, new List<string>() { level1stage2.id });
-        Node level1stage0 = new Node(1, 0, new List<string>() { level1stage1.id });
-
-        this.nodes.Add(level0stage0);
-        this.nodes.Add(level0stage1);
-        this.nodes.Add(level0stage2);
-        this.nodes.Add(level0stage3);
-        this.nodes.Add(level0stage4);
-        this.nodes.Add(level0stage5);
-        this.nodes.Add(level0stage6);
-        this.nodes.Add(level0stage7);
-        this.nodes.Add(level1stage0);
-        this.nodes.Add(level1stage1);
-        this.nodes.Add(level1stage2);
-        this.nodes.Add(level1stage3);
-        this.nodes.Add(level1stage4);
+        this.nodes.Add(node);
     }
 }
 
 [Serializable]
 public class Node
 {
-    public int level = 0;
-    public int stage = 0;
     public string id;
-    public bool isComplete = false;
-    public int score = 0;
-    public List<string> childrenIDs = new List<string>();
+    public StageData stageData;
+    public MetaData metaData;
 
     public Node() { }
 
-    public Node(int level, int stage, List<string> childrenIDs)
+    public Node(StageData stageData, MetaData metaData)
     {
-        this.level = level;
-        this.stage = stage;
-        this.id = string.Format("{0}-{1}", this.level, this.stage);
-        this.childrenIDs = childrenIDs;
+        this.id = string.Format("{0}-{1}", stageData.level, stageData.stage);
+        this.stageData = stageData;
+        this.metaData = metaData;
+    }
+}
+
+[Serializable]
+public class SerializedUserData
+{
+    public string username;
+    public int playerLevel = 0;
+    public Progress progress = new Progress();
+    public CardData[] cards;
+    public ItemData[] items = new ItemData[] { };
+
+    public SerializedUserData(UserData userData)
+    {
+        this.username = userData.username;
+        this.playerLevel = userData.playerLevel;
+        this.progress = userData.progress;
+
+        // Get card array from card list
+        int cardCount = userData.cards.Count;
+        CardData[] cards = new CardData[cardCount];
+        int cardIndex = 0;
+        foreach (CardData card in userData.cards)
+        {
+            cards[cardIndex] = card;
+            cardIndex++;
+        }
+
+        this.cards = cards;
+
+        // Get item array from item list
+        int itemCount = userData.items.Count;
+        ItemData[] items = new ItemData[itemCount];
+        int itemIndex = 0;
+        foreach (ItemData item in userData.items)
+        {
+            items[itemIndex] = item;
+            itemIndex++;
+        }
+
+        this.items = items;
     }
 }

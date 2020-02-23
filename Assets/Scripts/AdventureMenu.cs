@@ -15,7 +15,7 @@ public class AdventureMenu : MonoBehaviour
     public GameObject CardList;
 
     private UserManager userManager;
-    private NetworkManager networkManager;
+    private StageManager stageManager;
 
     private int currentLevel;
     private int currentStage;
@@ -24,7 +24,7 @@ public class AdventureMenu : MonoBehaviour
     {
         // Cache the user and stage managers
         this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
-        this.networkManager = ModelLocator.GetModelInstance<NetworkManager>() as NetworkManager;
+        this.stageManager = ModelLocator.GetModelInstance<StageManager>() as StageManager;
 
         // Cache current level and stage
         this.currentLevel = this.userManager.GetUserData().GetCurrentLevel();
@@ -34,37 +34,6 @@ public class AdventureMenu : MonoBehaviour
         this.SetTitle();
         this.ShowCardSelectOverlay(false);
         this.LayoutMenuWithStageButtons();
-
-        // TODO: stage creation script
-        //NoteData[] notes00 = new NoteData[] {
-        //    new NoteData(0, 0, 8),
-        //    new NoteData(2, 8, 5),
-        //    new NoteData(4, 13, 3),
-        //    new NoteData(2, 16, 8),
-        //    new NoteData(0, 24, 5),
-        //    new NoteData(-2, 29, 3),
-        //};
-        //NoteData[] notes01 = new NoteData[] {
-        //    new NoteData(0, 0, 4),
-        //    new NoteData(-2, 4, 4),
-        //    new NoteData(-4, 8, 2),
-        //    new NoteData(0, 10, 4),
-        //    new NoteData(4, 14, 2),
-        //    new NoteData(2, 16, 2),
-        //};
-        //int[] scoreTier = new int[] { 100, 200, 300 };
-        //CardBonus cardBonus00 = new CardBonus(0.1f, 0.2f, 0.3f, 0.4f);
-        //CardBonus cardBonus01 = new CardBonus(0.65f, 0.55f, 0.45f, 0.35f);
-        //ItemData item0 = new ItemData(0, "item0", 1);
-        //ItemData item1 = new ItemData(1, "item1", 2);
-        //ItemData item2 = new ItemData(2, "item2", 1);
-        //ItemData item3 = new ItemData(3, "item3", 1);
-        //ItemData item4 = new ItemData(4, "item4", 3);
-        //ItemData item5 = new ItemData(5, "item5", 1);
-        //ItemDrop[] itemDrops00 = new ItemDrop[] { new ItemDrop(item0, 1f), new ItemDrop(item1, 0.5f), new ItemDrop(item2, 0.1f) };
-        //ItemDrop[] itemDrops01 = new ItemDrop[] { new ItemDrop(item3, 0.1f), new ItemDrop(item4, 1f), new ItemDrop(item5, 0.5f) };
-        //StartCoroutine(this.networkManager.SaveStage(new StageData("china", 0, 0, scoreTier, cardBonus00, notes00, itemDrops00)));
-        //StartCoroutine(this.networkManager.SaveStage(new StageData("japan", 0, 1, scoreTier, cardBonus01, notes01, itemDrops01)));
     }
 
     // Load stage data from database
@@ -72,8 +41,7 @@ public class AdventureMenu : MonoBehaviour
     {
         // TODO: add argument for stage details
         // called onClick of a Stage Button
-        Debug.Log(stage);
-        StartCoroutine(this.LoadStage(stage));
+        this.LoadStage(stage);
     }
 
     // Show Card List
@@ -94,7 +62,7 @@ public class AdventureMenu : MonoBehaviour
         this.CardList.SetActive(false);
 
         // Show selected card data detail in this.SelectedCard
-        StartCoroutine(this.SelectedCard.GetComponent<SelectedCard>().ShowSelectedCardDetail(cardData));
+        this.SelectedCard.GetComponent<SelectedCard>().ShowSelectedCardDetail(cardData);
         Debug.Log("confirm card");
     }
 
@@ -103,10 +71,11 @@ public class AdventureMenu : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    // Ask the network manager for stage data for the current level and the selected stage
-    private IEnumerator LoadStage(int stage)
+    // Set stage data in stage manager
+    private void LoadStage(int stage)
     {
-        yield return StartCoroutine(this.networkManager.LoadStage(this.currentLevel, stage));
+        Node node = this.userManager.GetUserData().GetNodeById(this.currentLevel, stage);
+        this.stageManager.SetNodeData(node);
         this.ShowCardSelectOverlay(true);
     }
 

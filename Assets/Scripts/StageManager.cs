@@ -1,57 +1,42 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class StageManager
 {
     private StageData stageData;
+    private MetaData metaData;
     private float score;
     private bool isCountdownComplete = false;
     private bool isStageOver = false;
-    private ItemData[] droppedItems;
+    private List<ItemData> droppedItems = new List<ItemData>();
 
     public StageData GetStageData()
     {
         if (this.stageData == null)
         {
-            // No user found, so create a new user
+            // No stage found, create new stage data
             StageData newStageData = new StageData();
+            MetaData newMetaData = new MetaData();
             this.stageData = newStageData;
+            this.metaData = newMetaData;
         }
         return this.stageData;
     }
 
-    // Called after user data has been retrieved from database
-    public void SetStageData(string[] response)
+    public void SetNodeData(Node node)
     {
-        // Parse GET stage data response
-        string responseDescription = response[1];
-        string responseLevel = response[2];
-        string responseStage = response[3];
-        string responseScoreTier = response[4];
-        string responseCardBonus = response[5];
-        string responseNotes = response[6];
-        string responseItemDrops = response[7];
-
-        string description = responseDescription;
-        int level = int.Parse(responseLevel);
-        int stage = int.Parse(responseStage);
-        int[] scoreTier = JsonHelper.FromJson<int>(responseScoreTier);
-        CardBonus[] cardBonus = JsonHelper.FromJson<CardBonus>(responseCardBonus);
-        NoteData[] notes = JsonHelper.FromJson<NoteData>(responseNotes);
-        ItemDrop[] itemDrops = JsonHelper.FromJson<ItemDrop>(responseItemDrops);
-
-        // Construct and set StageData from response
-        StageData data = new StageData(description, level, stage, scoreTier, cardBonus[0], notes, itemDrops);
-        this.stageData = data;
+        this.stageData = node.stageData;
+        this.metaData = node.metaData;
     }
 
     public void ClearStage()
     {
         this.stageData = null;
+        this.metaData = null;
         this.score = 0f;
         this.isCountdownComplete = false;
         this.isStageOver = false;
-        this.droppedItems = new ItemData[] { };
+        this.droppedItems = new List<ItemData>();
     }
 
     public void SetScore(float score)
@@ -79,6 +64,11 @@ public class StageManager
         this.isStageOver = true;
         // Drop items
         this.DropItems();
+        // Clear the stage when the score is at least equal to the lowest score tier value
+        this.metaData.isComplete = this.score >= this.stageData.scoreTier[0];
+        // Set the high score when the score is greater than the current high score
+        this.metaData.highScore = Mathf.Max(this.score, this.metaData.highScore);
+        this.metaData.DecrementDailyAttempt();
     }
 
     public bool IsStageOver()
@@ -86,77 +76,24 @@ public class StageManager
         return this.isStageOver;
     }
 
-    public ItemData[] GetItemDrops()
+    public List<ItemData> GetItemDrops()
     {
         return this.droppedItems;
     }
 
-    // Turn StageData into JSON
-    public string SerializeStageData(StageData data)
-    {
-        StageData[] dataArray = new StageData[] { data };
-        string json = JsonHelper.ToJson(dataArray);
-        return json;
-    }
-
-    // Turn JSON into StageData
-    public StageData DeserializeStageData(string json)
-    {
-        StageData[] data = JsonHelper.FromJson<StageData>(json);
-        return data[0];
-    }
-
-    // Turn NoteData into JSON
-    public string SerializeNoteData(NoteData[] data)
-    {
-        NoteData[] dataArray = data;
-        string json = JsonHelper.ToJson(dataArray);
-        return json;
-    }
-
-    // Turn JSON into NoteData
-    public NoteData DeserializeNoteData(string json)
-    {
-        NoteData[] data = JsonHelper.FromJson<NoteData>(json);
-        return data[0];
-    }
-
-    // After the stage is over, drop items
+    // After the stage is over, drop and add items to list
     private void DropItems()
     {
-        ItemDrop[] itemDrops = this.stageData.itemDrops;
-        bool[] wasItemDropped = new bool[this.stageData.itemDrops.Length];
-
-        for (int i = 0; i < this.stageData.itemDrops.Length; i++)
+        // Go through each ItemData in ItemDrops
+        foreach (ItemDrop itemDrop in this.stageData.itemDrops)
         {
-            // Generate a random number
-            float drop = Random.Range(0f, 1f);
+            // Randomly generate a number
+            float dropNumber = Random.Range(0f, 1f);
 
-            // Drop the item if the random number is less than or equal to the drop rate
-            if (drop <= this.stageData.itemDrops[i].dropChance)
+            // Add ItemData if dropNumber is less than or equal to the drop chance
+            if (dropNumber <= itemDrop.dropChance)
             {
-                // Drop the item
-                wasItemDropped[i] = true;
-            }
-            else
-            {
-                // Do not drop the item
-                wasItemDropped[i] = false;
-            }
-        }
-
-        // Create this.droppedItems with length equal to number of true elements in wasItemDropped
-        this.droppedItems = new ItemData[wasItemDropped.Where(i => i).Count()];
-
-        // Go through wasItemDropped to add ItemData into this.droppedItems
-        int index = 0;
-        for (int i = 0; i < wasItemDropped.Length; i++)
-        {
-            if (wasItemDropped[i])
-            {
-                this.droppedItems[index] = this.stageData.itemDrops[i].item;
-                // Keep track of index of the last item added
-                index++;
+                this.droppedItems.Add(itemDrop.item);
             }
         }
 

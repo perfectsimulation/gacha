@@ -14,10 +14,9 @@
     }
 
     // Called after user data has been retrieved from database
-    public void SetUserData(string[] response)
+    public void SetUserData(UserData userData)
     {
-        UserData data = this.DeserializeUserData(response[1]);
-        this.userData = data;
+        this.userData = userData;
     }
 
     // Turn UserData into JSON

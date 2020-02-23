@@ -1,34 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class StageData
 {
-    public string id;
     public string description;
     public int level;
     public int stage;
     public int[] scoreTier;
     public CardBonus cardBonus;
-    public NoteData[] notes;
-    public ItemDrop[] itemDrops;
+    public List<NoteData> notes;
+    public List<ItemDrop> itemDrops;
 
     public StageData() { }
 
-    public StageData(string description, int level, int stage, int[] scoreTier, CardBonus[] cardBonus, NoteData[] notes, ItemDrop[] itemDrops)
+    public StageData(string description, int level, int stage, int[] scoreTier, CardBonus cardBonus, List<NoteData> notes, List<ItemDrop> itemDrops)
     {
-        this.id = string.Format("{0}-{1}", level, stage);
-        this.description = description;
-        this.level = level;
-        this.stage = stage;
-        this.scoreTier = scoreTier;
-        this.cardBonus = cardBonus[0];
-        this.notes = notes;
-        this.itemDrops = itemDrops;
-    }
-
-    public StageData(string description, int level, int stage, int[] scoreTier, CardBonus cardBonus, NoteData[] notes, ItemDrop[] itemDrops)
-    {
-        this.id = string.Format("{0}-{1}", level, stage);
         this.description = description;
         this.level = level;
         this.stage = stage;
@@ -36,6 +23,30 @@ public class StageData
         this.cardBonus = cardBonus;
         this.notes = notes;
         this.itemDrops = itemDrops;
+    }
+}
+
+[Serializable]
+public class MetaData
+{
+    public bool isComplete;
+    public float highScore;
+    public List<string> prerequisiteStageIds;
+    public int remainingDailyAttempts;
+
+    public MetaData() { }
+
+    public MetaData(List<string> prerequisiteStageIds)
+    {
+        this.isComplete = false;
+        this.highScore = 0f;
+        this.prerequisiteStageIds = prerequisiteStageIds;
+        this.remainingDailyAttempts = 3;
+    }
+
+    public void DecrementDailyAttempt()
+    {
+        this.remainingDailyAttempts--;
     }
 }
 

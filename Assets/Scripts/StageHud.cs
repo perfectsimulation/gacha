@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,7 +12,6 @@ public class StageHud : MonoBehaviour
 
     private UserManager userManager;
     private StageManager stageManager;
-    private NetworkManager networkManager;
 
     private TextMeshProUGUI countdownText;
 
@@ -21,10 +21,9 @@ public class StageHud : MonoBehaviour
 
     void Start()
     {
-        // Cache the user, stage, and network managers
+        // Cache the user and stage managers
         this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
         this.stageManager = ModelLocator.GetModelInstance<StageManager>() as StageManager;
-        this.networkManager = ModelLocator.GetModelInstance<NetworkManager>() as NetworkManager;
 
         // Show stage start countdown overlay
         this.ShowCountdownOverlay();
@@ -52,7 +51,7 @@ public class StageHud : MonoBehaviour
         else if (!this.ResultOverlay.activeInHierarchy)
         {
             // Stage is now over, get results from stage manager
-            ItemData[] droppedItems = this.stageManager.GetItemDrops();
+            List<ItemData> droppedItems = this.stageManager.GetItemDrops();
 
             // Give results to user manager
             this.userManager.GetUserData().AddItemsToInventory(droppedItems);
@@ -66,13 +65,13 @@ public class StageHud : MonoBehaviour
 
     public void EndStage()
     {
-        StartCoroutine(SaveAndExitStage());
+        SaveAndExitStage();
     }
 
-    private IEnumerator SaveAndExitStage()
+    private void SaveAndExitStage()
     {
-        // Save progress with network manager
-        yield return StartCoroutine(this.networkManager.UpdateUserData(this.userManager.GetUserData()));
+        UserData userData = this.userManager.GetUserData();
+        Persistence.SaveUserData(userData);
 
         // Tell stage manager to clear current stage data
         this.stageManager.ClearStage();

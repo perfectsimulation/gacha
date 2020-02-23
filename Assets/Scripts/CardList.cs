@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class CardList : MonoBehaviour
@@ -9,7 +10,7 @@ public class CardList : MonoBehaviour
 
     private UserManager userManager;
 
-    private CardData[] cards;
+    private List<CardData> cards;
     private CardData selectedCardData;
 
     void Start()
@@ -31,7 +32,7 @@ public class CardList : MonoBehaviour
         // Create a card preview for each card
         float spacing = 140f;
         // Instantiate a CardPreview for each card
-        for (int i = 0; i < this.cards.Length; i++)
+        for (int i = 0; i < this.cards.Count; i++)
         {
             // Create the new CardPreview
             GameObject cardPreview = Instantiate(this.CardPreviewPrefab);

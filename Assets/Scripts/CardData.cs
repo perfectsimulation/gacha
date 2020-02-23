@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class CardData
@@ -6,7 +7,6 @@ public class CardData
     // TODO: implement level and experience
     // TODO: design interesting properties - placeholder values for now
     public string name;
-    public string imageUrl;
     public int level;
     public int rarity;
     public int rank;
@@ -23,7 +23,6 @@ public class CardData
     public CardData()
     {
         this.name = "card";
-        this.imageUrl = "";
         this.level = 1;
         this.rarity = 0;
         this.rank = 0;
@@ -36,10 +35,9 @@ public class CardData
         this.severity = 0;
     }
 
-    public CardData(string name, string imageUrl, int level, int rarity, int rank, int water, int air, int hot, int cold, int host, int detectability, int severity, LevelRequirement[] levelReqs, RankRequirement[] rankReqs)
+    public CardData(string name, int level, int rarity, int rank, int water, int air, int hot, int cold, int host, int detectability, int severity, LevelRequirement[] levelReqs, RankRequirement[] rankReqs)
     {
         this.name = name;
-        this.imageUrl = imageUrl;
         this.level = level;
         this.rarity = rarity;
         this.rank = rank;
@@ -79,32 +77,19 @@ public class RankRequirement
 {
     public int rank;
     public int level;
-    public int[] itemIds;
-    public int[] itemQuantities;
+    public List<ItemData> items;
 
     public RankRequirement()
     {
         this.rank = 1;
         this.level = 1;
-        this.itemIds = new int[] { 0, 1, 2 };
-        this.itemQuantities = new int[] { 3, 5, 4 };
+        this.items = new List<ItemData>();
     }
 
-    public RankRequirement(int rank, int level, int[] itemIds, int[] itemQuantities)
+    public RankRequirement(int rank, int level, List<ItemData> items)
     {
         this.rank = rank;
         this.level = level;
-        this.itemIds = itemIds;
-        this.itemQuantities = itemQuantities;
+        this.items = items;
     }
-}
-
-public class LevelRequirements
-{
-    // TODO deserialize LevelRequirement array into a map
-}
-
-public class RankRequirements
-{
-    // TODO deserialize RankRequirement array into a map
 }

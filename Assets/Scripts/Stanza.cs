@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class Stanza : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class Stanza : MonoBehaviour
     private void BuildStanza(StageData stageData)
     {
         // Create a Note prefab for each NoteData
-        NoteData[] notes = stageData.notes;
+        List<NoteData> notes = stageData.notes;
         foreach (NoteData noteData in notes)
         {
             GameObject notePrefab = Instantiate(this.NotePrefab);
