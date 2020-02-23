@@ -60,15 +60,12 @@ public class Boundary : MonoBehaviour
     private float CalculateScoreMultiplier(CardData cardData)
     {
         CardBonus cardBonus = this.stageData.cardBonus;
-        float redBonus = cardData.red * (1f + cardBonus.redX);
-        float orangeBonus = cardData.orange * (1f + cardBonus.orangeX);
-        float yellowBonus = cardData.yellow * (1f + cardBonus.yellowX);
-        float greenBonus = cardData.green * (1f + cardBonus.greenX);
-        float blueBonus = cardData.blue * (1f + cardBonus.blueX);
-        float purpleBonus = cardData.purple * (1f + cardBonus.purpleX);
-        float pinkBonus = cardData.pink * (1f + cardBonus.pinkX);
-        float totalBonus = redBonus + orangeBonus + yellowBonus + greenBonus + blueBonus + purpleBonus + pinkBonus;
-        return totalBonus / 7f;
+        float waterBonus = cardData.waterAffinity * (1f + cardBonus.waterX);
+        float airBonus = cardData.airAffinity * (1f + cardBonus.airX);
+        float hotBonus = cardData.hotAffinity * (1f + cardBonus.hotX);
+        float coldBonus = cardData.coldAffinity * (1f + cardBonus.coldX);
+        float totalBonus = waterBonus + airBonus + hotBonus + coldBonus;
+        return totalBonus / 4f;
     }
 
     // Add colliding Notes to cache

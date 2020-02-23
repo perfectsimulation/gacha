@@ -107,21 +107,25 @@ public class NetworkManager
     {
         StageManager stageManager = ModelLocator.GetModelInstance<StageManager>() as StageManager;
         string id = string.Format("{0}-{1}", stageData.level, stageData.stage);
+        string description = stageData.description;
         string level = stageData.level.ToString();
         string stage = stageData.stage.ToString();
         string scoreTier = JsonHelper.ToJson<int>(stageData.scoreTier);
         CardBonus[] cardBonusForJson = new CardBonus[] { stageData.cardBonus };
         string cardBonus = JsonHelper.ToJson<CardBonus>(cardBonusForJson);
         string notesJson = stageManager.SerializeNoteData(stageData.notes);
+        string itemDropsJson = JsonHelper.ToJson(stageData.itemDrops);
 
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>
         {
             new MultipartFormDataSection("id", id),
+            new MultipartFormDataSection("description", description),
             new MultipartFormDataSection("level", level),
             new MultipartFormDataSection("stage", stage),
             new MultipartFormDataSection("scoreTier", scoreTier),
             new MultipartFormDataSection("cardBonus", cardBonus),
-            new MultipartFormDataSection("notes", notesJson)
+            new MultipartFormDataSection("notes", notesJson),
+            new MultipartFormDataSection("itemDrops", itemDropsJson)
         };
 
         UnityWebRequest www = UnityWebRequest.Post(this.saveStageUrl, formData);

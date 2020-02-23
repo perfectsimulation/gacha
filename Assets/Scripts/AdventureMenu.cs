@@ -50,10 +50,12 @@ public class AdventureMenu : MonoBehaviour
         //    new NoteData(2, 16, 2),
         //};
         //int[] scoreTier = new int[] { 100, 200, 300 };
-        //CardBonus cardBonus00 = new CardBonus(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f);
-        //CardBonus cardBonus01 = new CardBonus(0.65f, 0.55f, 0.45f, 0.35f, 0.45f, 0.55f, 0.65f);
-        //StartCoroutine(this.networkManager.SaveStage(new StageData(0, 0, scoreTier, cardBonus00, notes00)));
-        //StartCoroutine(this.networkManager.SaveStage(new StageData(0, 1, scoreTier, cardBonus01, notes01)));
+        //CardBonus cardBonus00 = new CardBonus(0.1f, 0.2f, 0.3f, 0.4f);
+        //CardBonus cardBonus01 = new CardBonus(0.65f, 0.55f, 0.45f, 0.35f);
+        //ItemDrop[] itemDrops00 = new ItemDrop[] { new ItemDrop(0, 1f), new ItemDrop(1, 0.5f), new ItemDrop(2, 0.1f) };
+        //ItemDrop[] itemDrops01 = new ItemDrop[] { new ItemDrop(3, 0.1f), new ItemDrop(4, 1f), new ItemDrop(5, 0.5f) };
+        //StartCoroutine(this.networkManager.SaveStage(new StageData("china", 0, 0, scoreTier, cardBonus00, notes00, itemDrops00)));
+        //StartCoroutine(this.networkManager.SaveStage(new StageData("japan", 0, 1, scoreTier, cardBonus01, notes01, itemDrops01)));
     }
 
     // Load stage data from database
