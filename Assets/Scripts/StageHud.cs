@@ -9,7 +9,9 @@ public class StageHud : MonoBehaviour
     public GameObject CountdownOverlay;
     public GameObject ResultOverlay;
 
+    private UserManager userManager;
     private StageManager stageManager;
+
     private TextMeshProUGUI countdownText;
 
     private float score;
@@ -18,10 +20,13 @@ public class StageHud : MonoBehaviour
 
     void Start()
     {
-        // Cache the stage manager
+        // Cache the user and stage managers
+        this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
         this.stageManager = ModelLocator.GetModelInstance<StageManager>() as StageManager;
+
         // Show stage start countdown overlay
         this.ShowCountdownOverlay();
+
         // Hide stage results overlay
         this.ResultOverlay.SetActive(false);
     }
@@ -44,7 +49,13 @@ public class StageHud : MonoBehaviour
         }
         else if (!this.ResultOverlay.activeInHierarchy)
         {
-            // Stage is now over, show result overlay
+            // Stage is now over, get results from stage manager
+            ItemData[] droppedItems = this.stageManager.GetItemDrops();
+
+            // Give results to user manager
+            this.userManager.GetUserData().AddItemsToInventory(droppedItems);
+
+            // Show result overlay
             this.ResultOverlay.SetActive(true);
             this.ShowResultOverlay();
         }

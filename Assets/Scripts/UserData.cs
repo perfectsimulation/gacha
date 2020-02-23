@@ -8,6 +8,7 @@ public class UserData
     public int playerLevel = 0;
     public ProgressTree progress = new ProgressTree();
     public CardData[] cards;
+    public ItemData[] items = new ItemData[] { };
 
     private CardData selectedCard;
 
@@ -70,6 +71,24 @@ public class UserData
         return stages;
     }
 
+    public void AddItemsToInventory(ItemData[] items)
+    {
+        // Add each new item to inventory
+        foreach (ItemData item in items)
+        {
+            if (this.HasAtLeastOneOfItem(item))
+            {
+                // Increment quantity of this item in the user's inventory
+                this.IncrementItemQuantity(item);
+            }
+            else
+            {
+                // User does not have any of this item yet, so add it to user's inventory
+                this.AddNewItemToInventory(item);
+            }
+        }
+    }
+
     private Node FindFirstIncompleteNode()
     {
         // Go through each Node to find the first one with isComplete = false
@@ -83,6 +102,46 @@ public class UserData
         return this.progress.nodes[0];
     }
 
+    private bool HasAtLeastOneOfItem(ItemData itemData)
+    {
+        foreach (ItemData item in this.items)
+        {
+            if (item.id == itemData.id)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void IncrementItemQuantity(ItemData itemData)
+    {
+        for (int i = 0; i < this.items.Length; i++)
+        {
+            if (this.items[i].id == itemData.id)
+            {
+                this.items[i].IncreaseQuantity(itemData.quantity);
+                return;
+            }
+        }
+
+    }
+
+    private void AddNewItemToInventory(ItemData itemData)
+    {
+        // Create a new ItemData array that is one unit longer than the current inventory
+        ItemData[] newInventory = new ItemData[this.items.Length + 1];
+
+        // Set the first element of the new inventory as the new item
+        newInventory[0] = itemData;
+
+        // Copy the old inventory into the new one
+        this.items.CopyTo(newInventory, 1);
+
+        // Set this inventory to the new inventory
+        this.items = newInventory;
+    }
 }
 
 [Serializable]

@@ -1,9 +1,13 @@
-﻿public class StageManager
+﻿using System.Linq;
+using UnityEngine;
+
+public class StageManager
 {
     private StageData stageData;
     private float score;
     private bool isCountdownComplete = false;
     private bool isStageOver = false;
+    private ItemData[] droppedItems;
 
     public StageData GetStageData()
     {
@@ -69,11 +73,18 @@
     public void SetStageOver()
     {
         this.isStageOver = true;
+        // Drop items
+        this.DropItems();
     }
 
     public bool IsStageOver()
     {
         return this.isStageOver;
+    }
+
+    public ItemData[] GetItemDrops()
+    {
+        return this.droppedItems;
     }
 
     // Turn StageData into JSON
@@ -106,4 +117,44 @@
         return data[0];
     }
 
+    // After the stage is over, drop items
+    private void DropItems()
+    {
+        ItemDrop[] itemDrops = this.stageData.itemDrops;
+        bool[] wasItemDropped = new bool[this.stageData.itemDrops.Length];
+
+        for (int i = 0; i < this.stageData.itemDrops.Length; i++)
+        {
+            // Generate a random number
+            float drop = Random.Range(0f, 1f);
+
+            // Drop the item if the random number is less than or equal to the drop rate
+            if (drop <= this.stageData.itemDrops[i].dropChance)
+            {
+                // Drop the item
+                wasItemDropped[i] = true;
+            }
+            else
+            {
+                // Do not drop the item
+                wasItemDropped[i] = false;
+            }
+        }
+
+        // Create this.droppedItems with length equal to number of true elements in wasItemDropped
+        this.droppedItems = new ItemData[wasItemDropped.Where(i => i).Count()];
+
+        // Go through wasItemDropped to add ItemData into this.droppedItems
+        int index = 0;
+        for (int i = 0; i < wasItemDropped.Length; i++)
+        {
+            if (wasItemDropped[i])
+            {
+                this.droppedItems[index] = this.stageData.itemDrops[i].item;
+                // Keep track of index of the last item added
+                index++;
+            }
+        }
+
+    }
 }

@@ -85,12 +85,12 @@ public class NoteData
 [Serializable]
 public class ItemDrop
 {
-    public int itemId;
+    public ItemData item;
     public float dropChance;
 
-    public ItemDrop(int itemId, float dropChance)
+    public ItemDrop(ItemData item, float dropChance)
     {
-        this.itemId = itemId;
+        this.item = item;
         this.dropChance = dropChance;
     }
 }
