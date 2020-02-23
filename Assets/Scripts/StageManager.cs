@@ -2,6 +2,8 @@
 {
     private StageData stageData;
     private float score;
+    private bool isCountdownComplete = false;
+    private bool isStageOver = false;
 
     public StageData GetStageData()
     {
@@ -52,6 +54,26 @@
     public float GetScore()
     {
         return this.score;
+    }
+
+    public void SetCountdownComplete()
+    {
+        this.isCountdownComplete = true;
+    }
+
+    public bool IsCountdownComplete()
+    {
+        return this.isCountdownComplete;
+    }
+
+    public void SetStageOver()
+    {
+        this.isStageOver = true;
+    }
+
+    public bool IsStageOver()
+    {
+        return this.isStageOver;
     }
 
     // Turn StageData into JSON

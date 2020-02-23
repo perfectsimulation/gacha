@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Boundary : MonoBehaviour
+public class TouchBoundary : MonoBehaviour
 {
     public Camera mainCamera;
     private BoxCollider boxCollider;
     private List<BoxCollider> intersectingNotes = new List<BoxCollider>();
 
-    private float scoreMultiplier = 1f;
-    private float scoreValue = 0f;
-
     private StageManager stageManager;
     private UserManager userManager;
+
+    private float scoreMultiplier = 1f;
+    private float scoreValue = 0f;
+    private bool isCountdownComplete = false;
 
     private StageData stageData;
     private CardData selectedCard;
@@ -32,6 +33,14 @@ public class Boundary : MonoBehaviour
 
     void Update()
     {
+        // Don't register touch input before stage countdown has completed
+        if (!this.isCountdownComplete)
+        {
+            // Ask stage manager if countdown is complete
+            this.isCountdownComplete = stageManager.IsCountdownComplete();
+            return;
+        }
+
         // TODO: register user multi-touch input
         if (Input.touchCount > 0)
         {
