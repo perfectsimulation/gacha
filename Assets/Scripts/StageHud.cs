@@ -54,6 +54,7 @@ public class StageHud : MonoBehaviour
             List<ItemData> droppedItems = this.stageManager.GetItemDrops();
 
             // Give results to user manager
+            this.UpdateExperience();
             this.userManager.GetUserData().AddItemsToInventory(droppedItems);
 
             // Show result overlay
@@ -65,19 +66,22 @@ public class StageHud : MonoBehaviour
 
     public void EndStage()
     {
-        SaveAndExitStage();
+        this.SaveStage();
+        this.ClearCurrentStageData();
+        // Load Adventure scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
-    private void SaveAndExitStage()
+    private void SaveStage()
     {
         UserData userData = this.userManager.GetUserData();
         Persistence.SaveUserData(userData);
+    }
 
+    private void ClearCurrentStageData()
+    {
         // Tell stage manager to clear current stage data
         this.stageManager.ClearStage();
-
-        // Load Adventure scene
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
     // Show countdown overlay before stage begins
@@ -108,6 +112,15 @@ public class StageHud : MonoBehaviour
             // Disable countdown overlay and set to true isCountdownComplete in stage manager
             this.CountdownOverlay.SetActive(false);
             this.stageManager.SetCountdownComplete();
+        }
+    }
+
+    // Increment user and card experiences if score surpassed threshold
+    private void UpdateExperience()
+    {
+        if (this.stageManager.GetMetaData().isComplete)
+        {
+            this.userManager.GetUserData().IncrementExperience();
         }
     }
 

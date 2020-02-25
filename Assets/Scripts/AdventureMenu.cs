@@ -63,7 +63,6 @@ public class AdventureMenu : MonoBehaviour
 
         // Show selected card data detail in this.SelectedCard
         this.SelectedCard.GetComponent<SelectedCard>().ShowSelectedCardDetail(cardData);
-        Debug.Log("confirm card");
     }
 
     public void StartStage()

@@ -2,11 +2,18 @@
 
 public static class DataInitializer
 {
-    private static int[] scoreTier0 = new int[] { 100, 200, 400 };
-    private static int[] scoreTier1 = new int[] { 320, 888, 1000 };
-    private static int[] scoreTier2 = new int[] { 600, 1000, 3230 };
+    /* USER */
+    private static readonly float userExperienceDeltaOnStageComplete = 100f;
+    private static readonly float cardExperienceDeltaOnStageComplete = 100f;
 
-    private static List<NoteData> notes0 = new List<NoteData> {
+    private static Dictionary<int, int> playerLevelTiers = new Dictionary<int, int>() { };
+
+    /* STAGE */
+    private static readonly int[] scoreTier0 = new int[] { 100, 200, 400 };
+    private static readonly int[] scoreTier1 = new int[] { 320, 888, 1000 };
+    private static readonly int[] scoreTier2 = new int[] { 600, 1000, 3230 };
+
+    private static readonly List<NoteData> notes0 = new List<NoteData> {
         new NoteData(0, 0, 8),
         new NoteData(2, 8, 5),
         new NoteData(4, 13, 3),
@@ -20,7 +27,7 @@ public static class DataInitializer
         new NoteData(0, 60, 5),
         new NoteData(-2, 65, 3),
     };
-    private static List<NoteData> notes1 = new List<NoteData> {
+    private static readonly List<NoteData> notes1 = new List<NoteData> {
         new NoteData(0, 0, 4),
         new NoteData(-2, 4, 4),
         new NoteData(-4, 8, 2),
@@ -35,41 +42,42 @@ public static class DataInitializer
         new NoteData(2, 32, 2),
     };
 
-    private static CardBonus cardBonus0 = new CardBonus(0.1f, 0.2f, 0.3f, 0.4f);
-    private static CardBonus cardBonus1 = new CardBonus(0.2f, 0.6f, 0.3f, 0.1f);
-    private static CardBonus cardBonus2 = new CardBonus(0.8f, 0.2f, 0.2f, 0.1f);
+    private static readonly CardBonus cardBonus0 = new CardBonus(0.1f, 0.2f, 0.3f, 0.4f);
+    private static readonly CardBonus cardBonus1 = new CardBonus(0.2f, 0.6f, 0.3f, 0.1f);
+    private static readonly CardBonus cardBonus2 = new CardBonus(0.8f, 0.2f, 0.2f, 0.1f);
 
-    private static ItemData item0 = new ItemData(0, "vitamins", 1);
-    private static ItemData item1 = new ItemData(1, "minerals", 1);
-    private static ItemData item2 = new ItemData(2, "carbohydrates", 1);
-    private static ItemData item3 = new ItemData(3, "protein", 1);
-    private static ItemData item4 = new ItemData(4, "water", 1);
-    private static ItemData item5 = new ItemData(5, "air", 1);
-    private static ItemData item6 = new ItemData(6, "surface", 1);
-    private static ItemData item7 = new ItemData(7, "acid", 1);
-    private static ItemData item8 = new ItemData(8, "base", 1);
-    private static ItemData item9 = new ItemData(9, "salt", 1);
-    private static ItemData item10 = new ItemData(10, "cough", 1);
-    private static ItemData item11 = new ItemData(11, "sneeze", 1);
-    private static ItemData item12 = new ItemData(12, "kiss", 1);
-    private static ItemData item13 = new ItemData(13, "hug", 1);
-    private static ItemData item14 = new ItemData(14, "blood", 1);
-    private static ItemData item15 = new ItemData(15, "rash", 1);
-    private static ItemData item16 = new ItemData(16, "vomit", 1);
+    private static readonly ItemData item0 = new ItemData(0, "vitamins", 1);
+    private static readonly ItemData item1 = new ItemData(1, "minerals", 1);
+    private static readonly ItemData item2 = new ItemData(2, "carbohydrates", 1);
+    private static readonly ItemData item3 = new ItemData(3, "protein", 1);
+    private static readonly ItemData item4 = new ItemData(4, "water", 1);
+    private static readonly ItemData item5 = new ItemData(5, "air", 1);
+    private static readonly ItemData item6 = new ItemData(6, "surface", 1);
+    private static readonly ItemData item7 = new ItemData(7, "acid", 1);
+    private static readonly ItemData item8 = new ItemData(8, "base", 1);
+    private static readonly ItemData item9 = new ItemData(9, "salt", 1);
+    private static readonly ItemData item10 = new ItemData(10, "cough", 1);
+    private static readonly ItemData item11 = new ItemData(11, "sneeze", 1);
+    private static readonly ItemData item12 = new ItemData(12, "kiss", 1);
+    private static readonly ItemData item13 = new ItemData(13, "hug", 1);
+    private static readonly ItemData item14 = new ItemData(14, "blood", 1);
+    private static readonly ItemData item15 = new ItemData(15, "rash", 1);
+    private static readonly ItemData item16 = new ItemData(16, "vomit", 1);
 
-    private static LevelRequirement[] card0LevelReqs = new LevelRequirement[] { new LevelRequirement(), new LevelRequirement(3, 300f), new LevelRequirement(4, 400f), new LevelRequirement(5, 500f), new LevelRequirement(6, 600f), new LevelRequirement(7, 700f), new LevelRequirement(8, 800f), new LevelRequirement(9, 900f), new LevelRequirement(10, 1000f) };
-    private static LevelRequirement[] card1LevelReqs = new LevelRequirement[] { new LevelRequirement(), new LevelRequirement(3, 300f), new LevelRequirement(4, 400f), new LevelRequirement(5, 500f), new LevelRequirement(6, 600f), new LevelRequirement(7, 700f), new LevelRequirement(8, 800f), new LevelRequirement(9, 900f), new LevelRequirement(10, 1000f), new LevelRequirement(11, 1100f), new LevelRequirement(12, 1200f), new LevelRequirement(13, 1300f), new LevelRequirement(14, 1400f), new LevelRequirement(15, 1500f), new LevelRequirement(16, 1600f), new LevelRequirement(17, 1700f), new LevelRequirement(18, 1800f), new LevelRequirement(19, 1900f), new LevelRequirement(20, 2000f) };
-    private static RankRequirement card0rankReq0 = new RankRequirement(1, 3, new List<ItemData> { item0, item1, item3 });
-    private static RankRequirement card1rankReq0 = new RankRequirement(1, 3, new List<ItemData> { item4, item5, item8 });
-    private static RankRequirement card1rankReq1 = new RankRequirement(2, 7, new List<ItemData> { item11, item13, item14 });
-    private static CardData card0 = new CardData("big red", 1, 0, 0, 29, 1, 29, 1, 20, 20, 20, card0LevelReqs, new RankRequirement[] { card0rankReq0 });
-    private static CardData card1 = new CardData("jungle boi", 1, 1, 0, 10, 20, 30, 40, 25, 4, 0, card1LevelReqs, new RankRequirement[] { card1rankReq0, card1rankReq1 });
+    private static readonly LevelRequirement[] card0LevelReqs = new LevelRequirement[] { new LevelRequirement(), new LevelRequirement(3, 300f), new LevelRequirement(4, 400f), new LevelRequirement(5, 500f), new LevelRequirement(6, 600f), new LevelRequirement(7, 700f), new LevelRequirement(8, 800f), new LevelRequirement(9, 900f), new LevelRequirement(10, 1000f) };
+    private static readonly LevelRequirement[] card1LevelReqs = new LevelRequirement[] { new LevelRequirement(), new LevelRequirement(3, 300f), new LevelRequirement(4, 400f), new LevelRequirement(5, 500f), new LevelRequirement(6, 600f), new LevelRequirement(7, 700f), new LevelRequirement(8, 800f), new LevelRequirement(9, 900f), new LevelRequirement(10, 1000f), new LevelRequirement(11, 1100f), new LevelRequirement(12, 1200f), new LevelRequirement(13, 1300f), new LevelRequirement(14, 1400f), new LevelRequirement(15, 1500f), new LevelRequirement(16, 1600f), new LevelRequirement(17, 1700f), new LevelRequirement(18, 1800f), new LevelRequirement(19, 1900f), new LevelRequirement(20, 2000f) };
+    private static readonly RankRequirement card0rankReq0 = new RankRequirement(1, 3, new List<ItemData> { item0, item1, item3 });
+    private static readonly RankRequirement card1rankReq0 = new RankRequirement(1, 3, new List<ItemData> { item4, item5, item8 });
+    private static readonly RankRequirement card1rankReq1 = new RankRequirement(2, 7, new List<ItemData> { item11, item13, item14 });
+    private static readonly CardData card0 = new CardData("big red", 0f, 0, 0, 29, 1, 29, 1, 20, 20, 20, card0LevelReqs, new RankRequirement[] { card0rankReq0 });
+    private static readonly CardData card1 = new CardData("jungle boi", 0f, 1, 0, 10, 20, 30, 40, 25, 4, 0, card1LevelReqs, new RankRequirement[] { card1rankReq0, card1rankReq1 });
 
     public static UserData CreateUser()
     {
         UserData user = new UserData();
         user.SetUsername("satan");
-        user.playerLevel = 0;
+        user.experience = 0f;
+        user.playerLevel = GetPlayerLevelByExperience(0f);
         user.progress = CreateProgress();
         user.cards = new List<CardData> { card0, card1 };
         user.items = new List<ItemData>();
@@ -115,6 +123,30 @@ public static class DataInitializer
     {
         // Create all new CardData
         // Save it to local device
+    }
+
+    public static float GetUserExperienceDeltaOnStageComplete()
+    {
+        return userExperienceDeltaOnStageComplete;
+    }
+
+    public static float GetCardExperienceDeltaOnStageComplete()
+    {
+        return cardExperienceDeltaOnStageComplete;
+    }
+
+    public static int GetPlayerLevelByExperience(float exp)
+    {
+        int level = 0;
+        foreach (KeyValuePair<int, int> tier in playerLevelTiers)
+        {
+            if (exp >= tier.Value)
+            {
+                level = tier.Key;
+            }
+        }
+
+        return level;
     }
 
     private static Progress CreateProgress()
@@ -201,4 +233,3 @@ public static class DataInitializer
         return itemDrops;
     }
 }
-

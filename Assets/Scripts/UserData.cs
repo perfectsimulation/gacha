@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class UserData
 {
     public string username;
+    public float experience = 0f;
     public int playerLevel = 0;
     public Progress progress = new Progress();
     public List<CardData> cards;
@@ -24,8 +25,8 @@ public class UserData
 
     public static UserData Deserialize(string serializedData)
     {
-        UserData userData = CreateNewInstance();
-        return userData;
+        // TODO
+        return CreateNewInstance();
     }
 
     public override string ToString()
@@ -99,6 +100,12 @@ public class UserData
         return stages;
     }
 
+    public void IncrementExperience()
+    {
+        this.IncrementUserExperience(DataInitializer.GetUserExperienceDeltaOnStageComplete());
+        this.IncrementCardExperience(DataInitializer.GetCardExperienceDeltaOnStageComplete());
+    }
+
     public void AddItemsToInventory(List<ItemData> items)
     {
         // Add each new item to inventory
@@ -114,6 +121,37 @@ public class UserData
                 // User does not have any of this item yet, so add it to user's inventory
                 this.items.Add(item);
             }
+        }
+    }
+
+    private void IncrementUserExperience(float delta)
+    {
+        this.experience += delta;
+        this.CheckForLevelUp();
+    }
+
+    private void IncrementCardExperience(float delta)
+    {
+        // Increment experience on selected card if one exists
+        if (this.selectedCard != null)
+        {
+            foreach (CardData card in this.cards)
+            {
+                if (this.selectedCard.name == card.name)
+                {
+                    card.IncrementExperience(delta);
+                }
+            }
+        }
+    }
+
+    private void CheckForLevelUp()
+    {
+        int levelForExperience = DataInitializer.GetPlayerLevelByExperience(this.experience);
+        if (this.playerLevel < levelForExperience)
+        {
+            // Level up time! TODO pretty celebration
+            this.playerLevel = levelForExperience;
         }
     }
 
@@ -193,6 +231,7 @@ public class SerializedUserData
 {
     public string username;
     public int playerLevel = 0;
+    public float experience = 0f;
     public Progress progress = new Progress();
     public CardData[] cards;
     public ItemData[] items = new ItemData[] { };
@@ -201,6 +240,7 @@ public class SerializedUserData
     {
         this.username = userData.username;
         this.playerLevel = userData.playerLevel;
+        this.experience = userData.experience;
         this.progress = userData.progress;
 
         // Get card array from card list

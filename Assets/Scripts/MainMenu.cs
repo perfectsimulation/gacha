@@ -36,6 +36,7 @@ public class MainMenu : MonoBehaviour
     {
         // TODO Save user with provided credentials
         UserData newUser = DataInitializer.CreateUser();
+        Persistence.SaveUserData(newUser);
         this.userManager.SetUserData(newUser);
 
         // After setting the user data for this session, begin Adventure

@@ -23,6 +23,19 @@ public class StageManager
         return this.stageData;
     }
 
+    public MetaData GetMetaData()
+    {
+        if (this.metaData == null)
+        {
+            // No meta data found, create new meta data
+            StageData newStageData = new StageData();
+            MetaData newMetaData = new MetaData();
+            this.stageData = newStageData;
+            this.metaData = newMetaData;
+        }
+        return this.metaData;
+    }
+
     public void SetNodeData(Node node)
     {
         this.stageData = node.stageData;
@@ -59,16 +72,22 @@ public class StageManager
         return this.isCountdownComplete;
     }
 
+    // Called by End Boundary
     public void SetStageOver()
     {
         this.isStageOver = true;
         // Drop items
         this.DropItems();
-        // Clear the stage when the score is at least equal to the lowest score tier value
+        // Set clear the stage when the score is at least equal to the lowest score tier value
         this.metaData.isComplete = this.score >= this.stageData.scoreTier[0];
-        // Set the high score when the score is greater than the current high score
+        // Set new high score when the score is greater than the current high score
         this.metaData.highScore = Mathf.Max(this.score, this.metaData.highScore);
         this.metaData.DecrementDailyAttempt();
+
+        // Save updated user data
+        UserManager userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
+        UserData userData = userManager.GetUserData();
+        Persistence.SaveUserData(userData);
     }
 
     public bool IsStageOver()
@@ -98,4 +117,5 @@ public class StageManager
         }
 
     }
+
 }
