@@ -4,13 +4,39 @@ using System.Collections.Generic;
 public class UserData
 {
     public string username;
-    public float experience = 0f;
     public int playerLevel = 0;
-    public Progress progress = new Progress();
-    public List<CardData> cards;
+    public float experience = 0f;
+    public List<StageData> stageData = new List<StageData>();
+    public List<MetaData> metaData = new List<MetaData>();
+    public List<CardData> cards = new List<CardData>();
     public List<ItemData> items = new List<ItemData>();
 
     private CardData selectedCard;
+
+    public UserData() { }
+
+    public UserData(SerializedUserData serializedUserData)
+    {
+        this.username = serializedUserData.username;
+        this.playerLevel = serializedUserData.playerLevel;
+        this.experience = serializedUserData.experience;
+        List<SerializedStageData> serializedStages = Serializer.ListFromArray<SerializedStageData>(serializedUserData.stageData);
+        foreach (SerializedStageData serializedStage in serializedStages)
+        {
+            StageData stage = new StageData(serializedStage);
+            this.stageData.Add(stage);
+        }
+
+        List<SerializedMetaData> serializedMetas = Serializer.ListFromArray<SerializedMetaData>(serializedUserData.metaData);
+        foreach (SerializedMetaData serializedMeta in serializedMetas)
+        {
+            MetaData meta = new MetaData(serializedMeta);
+            this.metaData.Add(meta);
+        }
+
+        this.cards = Serializer.ListFromArray<CardData>(serializedUserData.cards);
+        this.items = Serializer.ListFromArray<ItemData>(serializedUserData.items);
+    }
 
     public void Init()
     {
@@ -23,18 +49,11 @@ public class UserData
         return userData;
     }
 
-    public static UserData Deserialize(string serializedData)
-    {
-        // TODO
-        return CreateNewInstance();
-    }
-
     public override string ToString()
     {
         // Prepare properties for serialization
         SerializedUserData serialized = new SerializedUserData(this);
-        string s = JsonHelper.ToJson<SerializedUserData>(serialized);
-        return s;
+        return StringUtility.ToJson<SerializedUserData>(serialized);
     }
 
     public void SetUsername(string username)
@@ -65,36 +84,67 @@ public class UserData
 
     public int GetCurrentLevel()
     {
-        Node currentNode = this.FindFirstIncompleteNode();
-        return currentNode.stageData.level;
+        // Go through each meta to find the first one with isComplete = false
+        foreach (MetaData meta in this.metaData)
+        {
+            if (meta.isComplete == false)
+            {
+                return meta.level;
+            }
+        }
+
+        return 1;
     }
 
     public int GetCurrentStage()
     {
-        Node currentNode = this.FindFirstIncompleteNode();
-        return currentNode.stageData.stage;
+        // Go through each meta to find the first one with isComplete = false
+        foreach (MetaData meta in this.metaData)
+        {
+            if (meta.isComplete == false)
+            {
+                return meta.stage;
+            }
+        }
+
+        return 1;
     }
 
-    public Node GetNodeById(int level, int stage)
+    public StageData GetStageDataById(int level, int stage)
     {
-        string id = string.Format("{0}-{1}", level, stage);
-        foreach (Node node in this.progress.nodes)
+        string id = DataInitializer.FormatStageId(level, stage);
+        foreach (StageData data in this.stageData)
         {
-            if (node.id == id)
-                return node;
+            string stageId = DataInitializer.FormatStageId(data.level, data.stage);
+            if (stageId == id)
+                return data;
         }
-        return new Node();
+
+        return new StageData();
+    }
+
+    public MetaData GetMetaDataById(int level, int stage)
+    {
+        string id = DataInitializer.FormatStageId(level, stage);
+        foreach (MetaData data in this.metaData)
+        {
+            string metaId = DataInitializer.FormatStageId(data.level, data.stage);
+            if (metaId == id)
+                return data;
+        }
+
+        return new MetaData();
     }
 
     // Return all Nodes with the specified level
-    public List<Node> GetStagesOfLevel(int level)
+    public List<StageData> GetStagesOfLevel(int level)
     {
-        List<Node> stages = new List<Node>();
-        foreach (Node n in this.progress.nodes)
+        List<StageData> stages = new List<StageData>();
+        foreach (StageData data in this.stageData)
         {
-            if (n.stageData.level == level)
+            if (data.level == level)
             {
-                stages.Add(n);
+                stages.Add(data);
             }
         }
         return stages;
@@ -155,17 +205,18 @@ public class UserData
         }
     }
 
-    private Node FindFirstIncompleteNode()
+    private string FindFirstIncompleteStageId()
     {
-        // Go through each Node to find the first one with isComplete = false
-        foreach (Node n in this.progress.nodes)
+        // Go through each MetaData to find the first one with isComplete = false
+        foreach (MetaData meta in this.metaData)
         {
-            if (n.metaData.isComplete == false)
+            if (meta.isComplete == false)
             {
-                return n;
+                return DataInitializer.FormatStageId(meta.level, meta.stage);
             }
         }
-        return this.progress.nodes[0];
+
+        return string.Empty;
     }
 
     private bool HasAtLeastOneOfItem(ItemData itemData)
@@ -197,51 +248,43 @@ public class UserData
 }
 
 [Serializable]
-public class Progress
-{
-    public List<Node> nodes = new List<Node>();
-
-    public Progress() { }
-
-    public void AddNode(Node node)
-    {
-        this.nodes.Add(node);
-    }
-}
-
-[Serializable]
-public class Node
-{
-    public string id;
-    public StageData stageData;
-    public MetaData metaData;
-
-    public Node() { }
-
-    public Node(StageData stageData, MetaData metaData)
-    {
-        this.id = string.Format("{0}-{1}", stageData.level, stageData.stage);
-        this.stageData = stageData;
-        this.metaData = metaData;
-    }
-}
-
-[Serializable]
 public class SerializedUserData
 {
     public string username;
     public int playerLevel = 0;
     public float experience = 0f;
-    public Progress progress = new Progress();
+    public SerializedStageData[] stageData = new SerializedStageData[] { };
+    public SerializedMetaData[] metaData = new SerializedMetaData[] { };
     public CardData[] cards;
     public ItemData[] items = new ItemData[] { };
+
+    public SerializedUserData() { }
 
     public SerializedUserData(UserData userData)
     {
         this.username = userData.username;
         this.playerLevel = userData.playerLevel;
         this.experience = userData.experience;
-        this.progress = userData.progress;
+
+        // Get stage data
+        int stageCount = userData.stageData.Count;
+        this.stageData = new SerializedStageData[stageCount];
+        int stageIndex = 0;
+        foreach (StageData stage in userData.stageData)
+        {
+            this.stageData[stageIndex] = new SerializedStageData(stage);
+            stageIndex++;
+        }
+
+        // Get meta data
+        int metaCount = userData.metaData.Count;
+        this.metaData = new SerializedMetaData[metaCount];
+        int metaIndex = 0;
+        foreach (MetaData meta in userData.metaData)
+        {
+            this.metaData[metaIndex] = new SerializedMetaData(meta);
+            metaIndex++;
+        }
 
         // Get card array from card list
         int cardCount = userData.cards.Count;
@@ -266,5 +309,18 @@ public class SerializedUserData
         }
 
         this.items = items;
+    }
+
+    public SerializedUserData(string json)
+    {
+        UnityEngine.Debug.Log(json);
+        SerializedUserData data = StringUtility.FromJson<SerializedUserData>(json);
+        this.username = data.username;
+        this.playerLevel = data.playerLevel;
+        this.experience = data.experience;
+        this.stageData = data.stageData;
+        this.metaData = data.metaData;
+        this.cards = data.cards;
+        this.items = data.items;
     }
 }

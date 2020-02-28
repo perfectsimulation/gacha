@@ -73,8 +73,10 @@ public class AdventureMenu : MonoBehaviour
     // Set stage data in stage manager
     private void LoadStage(int stage)
     {
-        Node node = this.userManager.GetUserData().GetNodeById(this.currentLevel, stage);
-        this.stageManager.SetNodeData(node);
+        StageData stageData = this.userManager.GetUserData().GetStageDataById(this.currentLevel, stage);
+        MetaData metaData = this.userManager.GetUserData().GetMetaDataById(this.currentLevel, stage);
+        this.stageManager.SetStageData(stageData);
+        this.stageManager.SetMetaData(metaData);
         this.ShowCardSelectOverlay(true);
     }
 
@@ -96,7 +98,7 @@ public class AdventureMenu : MonoBehaviour
     // Populate the Adventure menu with Stage buttons using user data
     private void LayoutMenuWithStageButtons()
     {
-        List<Node> stages = this.userManager.GetUserData().GetStagesOfLevel(this.currentLevel);
+        List<StageData> stages = this.userManager.GetUserData().GetStagesOfLevel(this.currentLevel);
 
         // Create a Stage Button for each stage in this level
         float spacing = 150f;
@@ -113,7 +115,7 @@ public class AdventureMenu : MonoBehaviour
 
             // Set button label text
             TextMeshProUGUI stageButtonText = stageButton.gameObject.AddComponent<TextMeshProUGUI>();
-            stageButtonText.text = stages[i].id;
+            stageButtonText.text = DataInitializer.FormatStageId(stages[i].level, stages[i].stage);
             stageButtonText.alignment = TextAlignmentOptions.Center;
 
             // Position buttons equidistant for now - think of something fun later TODO

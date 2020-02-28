@@ -7,7 +7,7 @@ public static class Persistence
     private static UserData userData;
     private static List<CardData> cardLibrary;
 
-    private static readonly string userDataPath = "UserData.txt";
+    private static readonly string userDataPath = "UserData.json";
     private static readonly string cardLibraryPath = "CardLibrary.txt";
 
     public static bool HasUserData()
@@ -25,15 +25,20 @@ public static class Persistence
         userData = data;
         Debug.Log("Saved user data");
         // Write to file
-        File.WriteAllText(userDataPath, data.ToString());
+        File.WriteAllText(userDataPath, StringUtility.ToJson(new SerializedUserData(userData)));
     }
 
-    public static UserData LoadUserData()
+    public static SerializedUserData LoadUserData()
     {
-        string serializedUserData = File.ReadAllText(userDataPath);
-        UserData userData = UserData.Deserialize(serializedUserData);
-        Debug.Log("Loaded user data");
-        return userData;
+        if (DoesFileExistAtPath(userDataPath))
+        {
+            string serializedUserData = File.ReadAllText(userDataPath);
+            SerializedUserData userData = new SerializedUserData(serializedUserData);
+            Debug.Log("Loaded user data");
+            return userData;
+        }
+
+        return new SerializedUserData();
     }
 
     public static void SaveCardLibrary(List<CardData> cards)

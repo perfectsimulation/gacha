@@ -36,10 +36,14 @@ public class StageManager
         return this.metaData;
     }
 
-    public void SetNodeData(Node node)
+    public void SetStageData(StageData stageData)
     {
-        this.stageData = node.stageData;
-        this.metaData = node.metaData;
+        this.stageData = stageData;
+    }
+
+    public void SetMetaData(MetaData metaData)
+    {
+        this.metaData = metaData;
     }
 
     public void ClearStage()

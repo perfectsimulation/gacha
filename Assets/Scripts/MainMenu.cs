@@ -54,8 +54,9 @@ public class MainMenu : MonoBehaviour
     private void AttemptLogin()
     {
         // Load local data
-        UserData data = Persistence.LoadUserData();
-        this.userManager.SetUserData(data);
+        SerializedUserData data = Persistence.LoadUserData();
+        this.userManager.SetUserData(new UserData(data));
+        Debug.Log(data.metaData[0].remainingDailyAttempts);
 
         // After setting the user data for this session, begin Adventure
         this.StartAdventure();

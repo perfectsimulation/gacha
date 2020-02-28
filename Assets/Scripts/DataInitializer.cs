@@ -78,7 +78,8 @@ public static class DataInitializer
         user.SetUsername("satan");
         user.experience = 0f;
         user.playerLevel = GetPlayerLevelByExperience(0f);
-        user.progress = CreateProgress();
+        user.stageData = CreateStageDataList();
+        user.metaData = CreateMetaDataList();
         user.cards = new List<CardData> { card0, card1 };
         user.items = new List<ItemData>();
         return user;
@@ -119,6 +120,11 @@ public static class DataInitializer
         return stageData;
     }
 
+    public static string FormatStageId(int level, int stage)
+    {
+        return string.Format("{0}-{1}", level, stage);
+    }
+
     public static void InitializeCardLibrary()
     {
         // Create all new CardData
@@ -149,21 +155,32 @@ public static class DataInitializer
         return level;
     }
 
-    private static Progress CreateProgress()
+    private static List<StageData> CreateStageDataList()
     {
-        Progress progress = new Progress();
+        List<StageData> stageData = new List<StageData>();
         for (int level = 0; level < 2; level++)
         {
             for (int stage = 0; stage < 4; stage++)
             {
-                StageData stageData = GetStageData(level, stage);
-                MetaData metaData = CreateMetaData(level, stage);
-                Node node = new Node(stageData, metaData);
-                progress.AddNode(node);
+                StageData data = GetStageData(level, stage);
+                stageData.Add(data);
             }
         }
-        
-        return progress;
+        return stageData;
+    }
+
+    private static List<MetaData> CreateMetaDataList()
+    {
+        List<MetaData> metaData = new List<MetaData>();
+        for (int level = 0; level < 2; level++)
+        {
+            for (int stage = 0; stage < 4; stage++)
+            {
+                MetaData data = CreateMetaData(level, stage);
+                metaData.Add(data);
+            }
+        }
+        return metaData;
     }
 
     private static MetaData CreateMetaData(int level, int stage)
@@ -182,12 +199,8 @@ public static class DataInitializer
                 }
                 break;
         }
-        return new MetaData(prerequisiteStageIds);
-    }
 
-    private static string FormatStageId(int level, int stage)
-    {
-        return string.Format("{0}-{1}", level, stage);
+        return new MetaData(level, stage, prerequisiteStageIds);
     }
 
     private static List<ItemDrop> GetItemDropsForStage(int level, int stage)

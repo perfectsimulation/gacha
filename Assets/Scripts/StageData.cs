@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-[Serializable]
 public class StageData
 {
     public string description;
@@ -24,11 +23,48 @@ public class StageData
         this.notes = notes;
         this.itemDrops = itemDrops;
     }
+
+    public StageData(SerializedStageData serializedData)
+    {
+        this.description = serializedData.description;
+        this.level = serializedData.level;
+        this.stage = serializedData.stage;
+        this.scoreTier = serializedData.scoreTier;
+        this.cardBonus = serializedData.cardBonus;
+        this.notes = Serializer.ListFromArray<NoteData>(serializedData.notes);
+        this.itemDrops = Serializer.ListFromArray<ItemDrop>(serializedData.itemDrops);
+    }
 }
 
 [Serializable]
+public class SerializedStageData
+{
+    public string description;
+    public int level;
+    public int stage;
+    public int[] scoreTier;
+    public CardBonus cardBonus;
+    public NoteData[] notes;
+    public ItemDrop[] itemDrops;
+
+    public SerializedStageData() { }
+
+    public SerializedStageData(StageData stageData)
+    {
+        this.description = stageData.description;
+        this.level = stageData.level;
+        this.stage = stageData.stage;
+        this.scoreTier = stageData.scoreTier;
+        this.cardBonus = stageData.cardBonus;
+        this.notes = Serializer.ListToArray(stageData.notes);
+        this.itemDrops = Serializer.ListToArray(stageData.itemDrops);
+    }
+}
+
 public class MetaData
 {
+    public int level;
+    public int stage;
     public bool isComplete;
     public float highScore;
     public List<string> prerequisiteStageIds;
@@ -36,17 +72,52 @@ public class MetaData
 
     public MetaData() { }
 
-    public MetaData(List<string> prerequisiteStageIds)
+    public MetaData(int level, int stage, List<string> prerequisiteStageIds)
     {
+        this.level = level;
+        this.stage = stage;
         this.isComplete = false;
         this.highScore = 0f;
         this.prerequisiteStageIds = prerequisiteStageIds;
         this.remainingDailyAttempts = 3;
     }
 
+    public MetaData(SerializedMetaData serializedData)
+    {
+        this.level = serializedData.level;
+        this.stage = serializedData.stage;
+        this.isComplete = serializedData.isComplete;
+        this.highScore = serializedData.highScore;
+        this.prerequisiteStageIds = Serializer.ListFromArray<string>(serializedData.prerequisiteStageIds);
+        this.remainingDailyAttempts = serializedData.remainingDailyAttempts;
+    }
+
     public void DecrementDailyAttempt()
     {
         this.remainingDailyAttempts--;
+    }
+}
+
+[Serializable]
+public class SerializedMetaData
+{
+    public int level;
+    public int stage;
+    public bool isComplete;
+    public float highScore;
+    public string[] prerequisiteStageIds;
+    public int remainingDailyAttempts;
+
+    public SerializedMetaData() { }
+
+    public SerializedMetaData(MetaData metaData)
+    {
+        this.level = metaData.level;
+        this.stage = metaData.stage;
+        this.isComplete = metaData.isComplete;
+        this.highScore = metaData.highScore;
+        this.prerequisiteStageIds = Serializer.ListToArray(metaData.prerequisiteStageIds);
+        this.remainingDailyAttempts = metaData.remainingDailyAttempts;
     }
 }
 
