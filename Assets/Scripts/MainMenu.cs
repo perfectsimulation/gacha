@@ -12,12 +12,14 @@ public class MainMenu : MonoBehaviour
     public Button SubmitButton;
 
     private UserManager userManager;
+    private StageManager stageManager;
 
     private void Start()
     {
         this.ShowButtons(true);
         this.ShowSignupInputs(false);
         this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
+        this.stageManager = ModelLocator.GetModelInstance<StageManager>() as StageManager;
     }
 
     public void Login()
@@ -34,7 +36,6 @@ public class MainMenu : MonoBehaviour
 
     public void Submit()
     {
-        // TODO Save user with provided credentials
         UserData newUser = DataInitializer.CreateUser();
         Persistence.SaveUserData(newUser);
         this.userManager.SetUserData(newUser);
@@ -55,8 +56,8 @@ public class MainMenu : MonoBehaviour
     {
         // Load local data
         SerializedUserData data = Persistence.LoadUserData();
-        this.userManager.SetUserData(new UserData(data));
-        Debug.Log(data.metaData[0].remainingDailyAttempts);
+        UserData userData = new UserData(data);
+        this.userManager.SetUserData(userData);
 
         // After setting the user data for this session, begin Adventure
         this.StartAdventure();

@@ -117,7 +117,9 @@ public class UserData
         {
             string stageId = DataInitializer.FormatStageId(data.level, data.stage);
             if (stageId == id)
+            {
                 return data;
+            }
         }
 
         return new StageData();
@@ -313,7 +315,6 @@ public class SerializedUserData
 
     public SerializedUserData(string json)
     {
-        UnityEngine.Debug.Log(json);
         SerializedUserData data = StringUtility.FromJson<SerializedUserData>(json);
         this.username = data.username;
         this.playerLevel = data.playerLevel;

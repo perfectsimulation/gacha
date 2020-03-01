@@ -39,7 +39,6 @@ public class AdventureMenu : MonoBehaviour
     // Load stage data from database
     public void SelectStage(int stage)
     {
-        // TODO: add argument for stage details
         // called onClick of a Stage Button
         this.LoadStage(stage);
     }

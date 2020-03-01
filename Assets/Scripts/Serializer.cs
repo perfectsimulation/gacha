@@ -7,7 +7,7 @@ public static class Serializer
         int count = list.Count;
         T[] items = new T[count];
         int index = 0;
-        foreach (T item in items)
+        foreach (T item in list)
         {
             items[index] = item;
             index++;
