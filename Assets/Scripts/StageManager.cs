@@ -99,7 +99,7 @@ public class StageManager
         return this.isStageOver;
     }
 
-    public List<ItemData> GetItemDrops()
+    public List<ItemData> GetDroppedItems()
     {
         return this.droppedItems;
     }

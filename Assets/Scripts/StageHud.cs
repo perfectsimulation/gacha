@@ -13,6 +13,7 @@ public class StageHud : MonoBehaviour
     private UserManager userManager;
     private StageManager stageManager;
 
+    private StageData stageData;
     private TextMeshProUGUI countdownText;
 
     private float score;
@@ -51,7 +52,7 @@ public class StageHud : MonoBehaviour
         else if (!this.ResultOverlay.activeInHierarchy)
         {
             // Stage is now over, get results from stage manager
-            List<ItemData> droppedItems = this.stageManager.GetItemDrops();
+            List<ItemData> droppedItems = this.stageManager.GetDroppedItems();
 
             // Give results to user manager
             this.UpdateExperience();
@@ -127,6 +128,12 @@ public class StageHud : MonoBehaviour
     // Show result overlay after stage ends
     private void ShowResultOverlay()
     {
+        ResultOverlay resultOverlay = this.ResultOverlay.GetComponent<ResultOverlay>();
+        StageData stageData = this.stageManager.GetStageData();
+        // Show score tier
+        int[] scoreTier = stageData.scoreTier;
+        resultOverlay.DisplayScoreTier(this.score, scoreTier);
+        resultOverlay.DisplayItemDrops(this.stageManager.GetDroppedItems());
         this.ResultOverlay.SetActive(true);
     }
 }
