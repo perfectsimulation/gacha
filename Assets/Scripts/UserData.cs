@@ -6,7 +6,6 @@ public class UserData
     public string username;
     public int playerLevel = 0;
     public float experience = 0f;
-    public List<StageData> stageData = new List<StageData>();
     public List<MetaData> metaData = new List<MetaData>();
     public List<CardData> cards = new List<CardData>();
     public List<ItemData> items = new List<ItemData>();
@@ -20,12 +19,6 @@ public class UserData
         this.username = serializedUserData.username;
         this.playerLevel = serializedUserData.playerLevel;
         this.experience = serializedUserData.experience;
-        List<SerializedStageData> serializedStages = Serializer.ListFromArray<SerializedStageData>(serializedUserData.stageData);
-        foreach (SerializedStageData serializedStage in serializedStages)
-        {
-            StageData stage = new StageData(serializedStage);
-            this.stageData.Add(stage);
-        }
 
         List<SerializedMetaData> serializedMetas = Serializer.ListFromArray<SerializedMetaData>(serializedUserData.metaData);
         foreach (SerializedMetaData serializedMeta in serializedMetas)
@@ -110,21 +103,6 @@ public class UserData
         return 1;
     }
 
-    public StageData GetStageDataById(int level, int stage)
-    {
-        string id = DataInitializer.FormatStageId(level, stage);
-        foreach (StageData data in this.stageData)
-        {
-            string stageId = DataInitializer.FormatStageId(data.level, data.stage);
-            if (stageId == id)
-            {
-                return data;
-            }
-        }
-
-        return new StageData();
-    }
-
     public MetaData GetMetaDataById(int level, int stage)
     {
         string id = DataInitializer.FormatStageId(level, stage);
@@ -136,20 +114,6 @@ public class UserData
         }
 
         return new MetaData();
-    }
-
-    // Return all Nodes with the specified level
-    public List<StageData> GetStagesOfLevel(int level)
-    {
-        List<StageData> stages = new List<StageData>();
-        foreach (StageData data in this.stageData)
-        {
-            if (data.level == level)
-            {
-                stages.Add(data);
-            }
-        }
-        return stages;
     }
 
     public void IncrementExperience()
@@ -255,7 +219,6 @@ public class SerializedUserData
     public string username;
     public int playerLevel = 0;
     public float experience = 0f;
-    public SerializedStageData[] stageData = new SerializedStageData[] { };
     public SerializedMetaData[] metaData = new SerializedMetaData[] { };
     public CardData[] cards;
     public ItemData[] items = new ItemData[] { };
@@ -267,16 +230,6 @@ public class SerializedUserData
         this.username = userData.username;
         this.playerLevel = userData.playerLevel;
         this.experience = userData.experience;
-
-        // Get stage data
-        int stageCount = userData.stageData.Count;
-        this.stageData = new SerializedStageData[stageCount];
-        int stageIndex = 0;
-        foreach (StageData stage in userData.stageData)
-        {
-            this.stageData[stageIndex] = new SerializedStageData(stage);
-            stageIndex++;
-        }
 
         // Get meta data
         int metaCount = userData.metaData.Count;
@@ -319,7 +272,6 @@ public class SerializedUserData
         this.username = data.username;
         this.playerLevel = data.playerLevel;
         this.experience = data.experience;
-        this.stageData = data.stageData;
         this.metaData = data.metaData;
         this.cards = data.cards;
         this.items = data.items;

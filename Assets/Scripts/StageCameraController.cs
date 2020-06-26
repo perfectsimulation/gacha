@@ -7,7 +7,7 @@ public class StageCameraController : MonoBehaviour
     public Camera mainCamera;
     public float mainCameraSpeed;
 
-    private StageManager stageManager;
+    private StoryManager storyManager;
 
     private Transform mainCameraTransform;
     private Vector3 mainCameraForwardVector;
@@ -17,7 +17,7 @@ public class StageCameraController : MonoBehaviour
     void Start()
     {
         // Cache the stage manager
-        this.stageManager = ModelLocator.GetModelInstance<StageManager>() as StageManager;
+        this.storyManager = ModelLocator.GetModelInstance<StoryManager>() as StoryManager;
         // Cache the main camera transform
         this.mainCameraTransform = this.mainCamera.transform;
         // Rotation for main camera forward vector
@@ -34,7 +34,7 @@ public class StageCameraController : MonoBehaviour
         if (!this.isCountdownComplete)
         {
             // Ask stage manager if countdown is complete
-            this.isCountdownComplete = stageManager.IsCountdownComplete();
+            this.isCountdownComplete = storyManager.IsCountdownComplete();
             return;
         }
 
@@ -42,7 +42,7 @@ public class StageCameraController : MonoBehaviour
         if (!this.isStageOver)
         {
             this.mainCameraTransform.Translate(mainCameraForwardVector);
-            this.isStageOver = stageManager.IsStageOver();
+            this.isStageOver = storyManager.IsStageOver();
             return;
         }
 

@@ -72,13 +72,25 @@ public static class DataInitializer
     private static readonly CardData card0 = new CardData("big red", 0f, 0, 0, 29, 1, 29, 1, 20, 20, 20, card0LevelReqs, new RankRequirement[] { card0rankReq0 });
     private static readonly CardData card1 = new CardData("jungle boi", 0f, 1, 0, 10, 20, 30, 40, 25, 4, 0, card1LevelReqs, new RankRequirement[] { card1rankReq0, card1rankReq1 });
 
+    private static readonly StageData stage0_0 = new StageData("level 0 - stage 0", 0, 0, scoreTier0, cardBonus0, notes0, GetItemDropsForStage(0, 0));
+    private static readonly StageData stage0_1 = new StageData("level 0 - stage 1", 0, 1, scoreTier0, cardBonus2, notes1, GetItemDropsForStage(0, 1));
+    private static readonly StageData stage0_2 = new StageData("level 0 - stage 2", 0, 2, scoreTier1, cardBonus1, notes1, GetItemDropsForStage(0, 2));
+    private static readonly StageData stage0_3 = new StageData("level 0 - stage 3", 0, 3, scoreTier1, cardBonus1, notes0, GetItemDropsForStage(0, 3));
+    private static readonly StageData stage0_4 = new StageData("level 0 - stage 4", 0, 4, scoreTier2, cardBonus0, notes1, GetItemDropsForStage(0, 4));
+    private static readonly StageData stage0_5 = new StageData("level 0 - stage 5", 0, 5, scoreTier2, cardBonus2, notes1, GetItemDropsForStage(0, 5));
+
+    private static readonly StageData stage1_0 = new StageData("level 1 - stage 0", 1, 0, scoreTier2, cardBonus1, notes0, GetItemDropsForStage(1, 0));
+    private static readonly StageData stage1_1 = new StageData("level 1 - stage 1", 1, 1, scoreTier2, cardBonus1, notes0, GetItemDropsForStage(1, 1));
+    private static readonly StageData stage1_2 = new StageData("level 1 - stage 2", 1, 2, scoreTier1, cardBonus2, notes0, GetItemDropsForStage(1, 2));
+    private static readonly StageData stage1_3 = new StageData("level 1 - stage 3", 1, 3, scoreTier1, cardBonus2, notes0, GetItemDropsForStage(1, 3));
+    private static readonly StageData stage1_4 = new StageData("level 1 - stage 4", 1, 4, scoreTier0, cardBonus0, notes1, GetItemDropsForStage(1, 4));
+
     public static UserData CreateUser()
     {
         UserData user = new UserData();
         user.SetUsername("satan");
         user.experience = 0f;
         user.playerLevel = GetPlayerLevelByExperience(0f);
-        user.stageData = CreateStageDataList();
         user.metaData = CreateMetaDataList();
         user.cards = new List<CardData> { card0, card1 };
         user.items = new List<ItemData>();
@@ -87,37 +99,59 @@ public static class DataInitializer
 
     public static StageData GetStageData(int level, int stage)
     {
-        StageData stageData;
-        string description = string.Format("level {0} - stage {1}", level, stage);
-        List<ItemDrop> itemDrops = GetItemDropsForStage(level, stage);
         switch (level)
         {
             case 0:
                 switch (stage)
                 {
                     case 0:
-                        stageData = new StageData(description, level, stage, scoreTier0, cardBonus0, notes0, itemDrops);
-                        break;
+                        return stage0_0;
                     case 1:
-                        stageData = new StageData(description, level, stage, scoreTier1, cardBonus1, notes1, itemDrops);
-                        break;
+                        return stage0_1;
                     case 2:
-                        stageData = new StageData(description, level, stage, scoreTier2, cardBonus2, notes1, itemDrops);
-                        break;
+                        return stage0_2;
                     case 3:
-                        stageData = new StageData(description, level, stage, scoreTier2, cardBonus1, notes0, itemDrops);
-                        break;
+                        return stage0_3;
+                    case 4:
+                        return stage0_4;
+                    case 5:
+                        return stage0_5;
                     default:
-                        stageData = new StageData(description, level, stage, scoreTier1, cardBonus0, notes1, itemDrops);
-                        break;
+                        return stage0_0;
                 }
-                break;
+            case 1:
+                switch (stage)
+                {
+                    case 0:
+                        return stage1_0;
+                    case 1:
+                        return stage1_1;
+                    case 2:
+                        return stage1_2;
+                    case 3:
+                        return stage1_3;
+                    case 4:
+                        return stage1_4;
+                    default:
+                        return stage1_0;
+                }
             default:
-                stageData = new StageData(description, level, stage, scoreTier0, cardBonus0, notes0, itemDrops);
-                break;
+                return stage0_0;
         }
 
-        return stageData;
+    }
+
+    public static List<StageData> GetStagesOfLevel(int level)
+    {
+        switch (level)
+        {
+            case 0:
+                return new List<StageData>() { stage0_0, stage0_1, stage0_2, stage0_3, stage0_4, stage0_5 };
+            case 1:
+                return new List<StageData>() { stage1_0, stage1_1, stage1_2, stage1_3, stage1_4 };
+            default:
+                return new List<StageData>() { stage0_0, stage0_1, stage0_2, stage0_3, stage0_4, stage0_5 };
+        }
     }
 
     public static string FormatStageId(int level, int stage)

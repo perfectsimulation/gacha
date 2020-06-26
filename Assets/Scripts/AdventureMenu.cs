@@ -15,7 +15,7 @@ public class AdventureMenu : MonoBehaviour
     public GameObject CardList;
 
     private UserManager userManager;
-    private StageManager stageManager;
+    private StoryManager storyManager;
 
     private int currentLevel;
     private int currentStage;
@@ -24,7 +24,7 @@ public class AdventureMenu : MonoBehaviour
     {
         // Cache the user and stage managers
         this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
-        this.stageManager = ModelLocator.GetModelInstance<StageManager>() as StageManager;
+        this.storyManager = ModelLocator.GetModelInstance<StoryManager>() as StoryManager;
 
         // Cache current level and stage
         this.currentLevel = this.userManager.GetUserData().GetCurrentLevel();
@@ -72,10 +72,10 @@ public class AdventureMenu : MonoBehaviour
     // Set stage data in stage manager
     private void LoadStage(int stage)
     {
-        StageData stageData = this.userManager.GetUserData().GetStageDataById(this.currentLevel, stage);
+        StageData stageData = DataInitializer.GetStageData(this.currentLevel, stage);
         MetaData metaData = this.userManager.GetUserData().GetMetaDataById(this.currentLevel, stage);
-        this.stageManager.SetStageData(stageData);
-        this.stageManager.SetMetaData(metaData);
+        this.storyManager.SetStageData(stageData);
+        this.storyManager.SetMetaData(metaData);
         this.ShowCardSelectOverlay(true);
     }
 
@@ -94,10 +94,10 @@ public class AdventureMenu : MonoBehaviour
         this.CardList.SetActive(false);
     }
 
-    // Populate the Adventure menu with Stage buttons using user data
+    // Populate the Adventure menu with Stage buttons using story data
     private void LayoutMenuWithStageButtons()
     {
-        List<StageData> stages = this.userManager.GetUserData().GetStagesOfLevel(this.currentLevel);
+        List<StageData> stages = DataInitializer.GetStagesOfLevel(this.currentLevel);
 
         // Create a Stage Button for each stage in this level
         float spacing = 150f;
