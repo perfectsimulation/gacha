@@ -2,12 +2,12 @@
 
 public class EndBoundary : MonoBehaviour
 {
-    private StoryManager storyManager;
+    private BattleManager battleManager;
 
     void Start()
     {
         // Cache the stage manager
-        this.storyManager = ModelLocator.GetModelInstance<StoryManager>() as StoryManager;
+        this.battleManager = ModelLocator.GetModelInstance<BattleManager>() as BattleManager;
     }
 
     // Watch for stage completion
@@ -16,7 +16,7 @@ public class EndBoundary : MonoBehaviour
         if (other.gameObject.GetComponent<TouchBoundary>())
         {
             // The touch boundary has reached this end boundary, so tell stage manager the stage is over
-            this.storyManager.SetStageOver();
+            this.battleManager.SetStageOver();
         }
     }
 }

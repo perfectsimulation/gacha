@@ -15,7 +15,7 @@ public class AdventureMenu : MonoBehaviour
     public GameObject CardList;
 
     private UserManager userManager;
-    private StoryManager storyManager;
+    private BattleManager battleManager;
 
     private int currentLevel;
     private int currentStage;
@@ -24,7 +24,7 @@ public class AdventureMenu : MonoBehaviour
     {
         // Cache the user and stage managers
         this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
-        this.storyManager = ModelLocator.GetModelInstance<StoryManager>() as StoryManager;
+        this.battleManager = ModelLocator.GetModelInstance<BattleManager>() as BattleManager;
 
         // Cache current level and stage
         this.currentLevel = this.userManager.GetUserData().GetCurrentLevel();
@@ -74,8 +74,8 @@ public class AdventureMenu : MonoBehaviour
     {
         StageData stageData = DataInitializer.GetStageData(this.currentLevel, stage);
         MetaData metaData = this.userManager.GetUserData().GetMetaDataById(this.currentLevel, stage);
-        this.storyManager.SetStageData(stageData);
-        this.storyManager.SetMetaData(metaData);
+        this.battleManager.SetStageData(stageData);
+        this.battleManager.SetMetaData(metaData);
         this.ShowCardSelectOverlay(true);
     }
 

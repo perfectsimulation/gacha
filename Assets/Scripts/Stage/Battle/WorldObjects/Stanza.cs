@@ -5,13 +5,13 @@ public class Stanza : MonoBehaviour
 {
     public GameObject NotePrefab;
 
-    private StoryManager storyManager;
+    private BattleManager battleManager;
 
     void Awake()
     {
-        // Stage data has been loaded and cached in StoryManager
-        this.storyManager = ModelLocator.GetModelInstance<StoryManager>() as StoryManager;
-        this.BuildStanza(this.storyManager.GetStageData());
+        // Stage data has been loaded and cached in BattleManager
+        this.battleManager = ModelLocator.GetModelInstance<BattleManager>() as BattleManager;
+        this.BuildStanza(this.battleManager.GetStageData());
     }
 
     // Layout the stage by instantiating Note prefabs from NoteData

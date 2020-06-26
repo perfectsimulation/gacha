@@ -11,7 +11,7 @@ public class StageHud : MonoBehaviour
     public GameObject ResultOverlay;
 
     private UserManager userManager;
-    private StoryManager storyManager;
+    private BattleManager battleManager;
 
     private StageData stageData;
     private TextMeshProUGUI countdownText;
@@ -24,7 +24,7 @@ public class StageHud : MonoBehaviour
     {
         // Cache the user and stage managers
         this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
-        this.storyManager = ModelLocator.GetModelInstance<StoryManager>() as StoryManager;
+        this.battleManager = ModelLocator.GetModelInstance<BattleManager>() as BattleManager;
 
         // Show stage start countdown overlay
         this.ShowCountdownOverlay();
@@ -38,7 +38,7 @@ public class StageHud : MonoBehaviour
         // Update score while stage is in session
         if (!this.isStageOver)
         {
-            float newScore = this.storyManager.GetScore();
+            float newScore = this.battleManager.GetScore();
             // Change score in HUD if needed
             if (this.score != newScore)
             {
@@ -47,12 +47,12 @@ public class StageHud : MonoBehaviour
             }
 
             // Check if stage is over
-            this.isStageOver = storyManager.IsStageOver();
+            this.isStageOver = battleManager.IsStageOver();
         }
         else if (!this.ResultOverlay.activeInHierarchy)
         {
             // Stage is now over, get results from stage manager
-            List<ItemData> droppedItems = this.storyManager.GetDroppedItems();
+            List<ItemData> droppedItems = this.battleManager.GetDroppedItems();
 
             // Give results to user manager
             this.UpdateExperience();
@@ -82,7 +82,7 @@ public class StageHud : MonoBehaviour
     private void ClearCurrentStageData()
     {
         // Tell stage manager to clear current stage data
-        this.storyManager.ClearStage();
+        this.battleManager.ClearStage();
     }
 
     // Show countdown overlay before stage begins
@@ -112,14 +112,14 @@ public class StageHud : MonoBehaviour
         {
             // Disable countdown overlay and set to true isCountdownComplete in stage manager
             this.CountdownOverlay.SetActive(false);
-            this.storyManager.SetCountdownComplete();
+            this.battleManager.SetCountdownComplete();
         }
     }
 
     // Increment user and card experiences if score surpassed threshold
     private void UpdateExperience()
     {
-        if (this.storyManager.GetMetaData().isComplete)
+        if (this.battleManager.GetMetaData().isComplete)
         {
             this.userManager.GetUserData().IncrementExperience();
         }
@@ -129,11 +129,11 @@ public class StageHud : MonoBehaviour
     private void ShowResultOverlay()
     {
         ResultOverlay resultOverlay = this.ResultOverlay.GetComponent<ResultOverlay>();
-        StageData stageData = this.storyManager.GetStageData();
+        StageData stageData = this.battleManager.GetStageData();
         // Show score tier
         int[] scoreTier = stageData.scoreTier;
         resultOverlay.DisplayScoreTier(this.score, scoreTier);
-        resultOverlay.DisplayItemDrops(this.storyManager.GetDroppedItems());
+        resultOverlay.DisplayItemDrops(this.battleManager.GetDroppedItems());
         this.ResultOverlay.SetActive(true);
     }
 }

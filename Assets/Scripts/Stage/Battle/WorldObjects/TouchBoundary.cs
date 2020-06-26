@@ -7,7 +7,7 @@ public class TouchBoundary : MonoBehaviour
     private BoxCollider boxCollider;
     private List<BoxCollider> intersectingNotes = new List<BoxCollider>();
 
-    private StoryManager storyManager;
+    private BattleManager battleManager;
     private UserManager userManager;
 
     private float scoreMultiplier = 1f;
@@ -23,10 +23,10 @@ public class TouchBoundary : MonoBehaviour
         this.boxCollider = this.GetComponent<BoxCollider>();
 
         // Cache the user and stage managers
-        this.storyManager = ModelLocator.GetModelInstance<StoryManager>() as StoryManager;
+        this.battleManager = ModelLocator.GetModelInstance<BattleManager>() as BattleManager;
         this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
 
-        this.stageData = this.storyManager.GetStageData();
+        this.stageData = this.battleManager.GetStageData();
         this.selectedCard = this.userManager.GetUserData().GetSelectedCardData();
         this.scoreMultiplier = this.CalculateScoreMultiplier(this.selectedCard);
     }
@@ -37,7 +37,7 @@ public class TouchBoundary : MonoBehaviour
         if (!this.isCountdownComplete)
         {
             // Ask stage manager if countdown is complete
-            this.isCountdownComplete = storyManager.IsCountdownComplete();
+            this.isCountdownComplete = battleManager.IsCountdownComplete();
             return;
         }
 
@@ -57,7 +57,7 @@ public class TouchBoundary : MonoBehaviour
                         // The touch intersects a Note that is currently colliding with the Boundary
                         // Increase score while touch is held down and intersects both Boundary and Note
                         this.scoreValue++;
-                        this.storyManager.SetScore(this.scoreValue * this.scoreMultiplier);
+                        this.battleManager.SetScore(this.scoreValue * this.scoreMultiplier);
                     }
                 }
             }

@@ -12,14 +12,14 @@ public class MainMenu : MonoBehaviour
     public Button SubmitButton;
 
     private UserManager userManager;
-    private StoryManager storyManager;
+    private BattleManager battleManager;
 
     private void Start()
     {
         this.ShowButtons(true);
         this.ShowSignupInputs(false);
         this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
-        this.storyManager = ModelLocator.GetModelInstance<StoryManager>() as StoryManager;
+        this.battleManager = ModelLocator.GetModelInstance<BattleManager>() as BattleManager;
     }
 
     public void Login()

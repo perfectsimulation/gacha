@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class StoryManager
+public class BattleManager
 {
     private StageData stageData;
     private MetaData metaData;
