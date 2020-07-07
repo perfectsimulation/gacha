@@ -42,9 +42,9 @@ public static class DataInitializer
         new NoteData(2, 32, 2),
     };
 
-    private static readonly CardBonus cardBonus0 = new CardBonus(0.1f, 0.2f, 0.3f, 0.4f);
-    private static readonly CardBonus cardBonus1 = new CardBonus(0.2f, 0.6f, 0.3f, 0.1f);
-    private static readonly CardBonus cardBonus2 = new CardBonus(0.8f, 0.2f, 0.2f, 0.1f);
+    private static readonly ElementalPower stage0elementalPower = new ElementalPower(100, 0, 0, 0);
+    private static readonly ElementalPower stage1elementalPower = new ElementalPower(0, 100, 0, 0);
+    private static readonly ElementalPower stage2elementalPower = new ElementalPower(0, 0, 10, 60);
 
     private static readonly ItemData item0 = new ItemData(0, "vitamins", 1);
     private static readonly ItemData item1 = new ItemData(1, "minerals", 1);
@@ -69,21 +69,23 @@ public static class DataInitializer
     private static readonly RankRequirement card0rankReq0 = new RankRequirement(1, 3, new List<ItemData> { item0, item1, item3 });
     private static readonly RankRequirement card1rankReq0 = new RankRequirement(1, 3, new List<ItemData> { item4, item5, item8 });
     private static readonly RankRequirement card1rankReq1 = new RankRequirement(2, 7, new List<ItemData> { item11, item13, item14 });
-    private static readonly CardData card0 = new CardData("big red", 0f, 0, 0, 29, 1, 29, 1, 20, 20, 20, card0LevelReqs, new RankRequirement[] { card0rankReq0 });
-    private static readonly CardData card1 = new CardData("jungle boi", 0f, 1, 0, 10, 20, 30, 40, 25, 4, 0, card1LevelReqs, new RankRequirement[] { card1rankReq0, card1rankReq1 });
+    private static readonly ElementalPower elementalPower0 = new ElementalPower(1000, 0, 0, 0);
+    private static readonly ElementalPower elementalPower1 = new ElementalPower(0, 100, 100, 100);
+    private static readonly CardData card0 = new CardData("big red", 0f, 100, elementalPower0, card0LevelReqs, new RankRequirement[] { card0rankReq0 });
+    private static readonly CardData card1 = new CardData("jungle boi", 0f, 100, elementalPower1, card1LevelReqs, new RankRequirement[] { card1rankReq0, card1rankReq1 });
 
-    private static readonly StageData stage0_0 = new StageData("level 0 - stage 0", 0, 0, scoreTier0, cardBonus0, notes0, GetItemDropsForStage(0, 0));
-    private static readonly StageData stage0_1 = new StageData("level 0 - stage 1", 0, 1, scoreTier0, cardBonus2, notes1, GetItemDropsForStage(0, 1));
-    private static readonly StageData stage0_2 = new StageData("level 0 - stage 2", 0, 2, scoreTier1, cardBonus1, notes1, GetItemDropsForStage(0, 2));
-    private static readonly StageData stage0_3 = new StageData("level 0 - stage 3", 0, 3, scoreTier1, cardBonus1, notes0, GetItemDropsForStage(0, 3));
-    private static readonly StageData stage0_4 = new StageData("level 0 - stage 4", 0, 4, scoreTier2, cardBonus0, notes1, GetItemDropsForStage(0, 4));
-    private static readonly StageData stage0_5 = new StageData("level 0 - stage 5", 0, 5, scoreTier2, cardBonus2, notes1, GetItemDropsForStage(0, 5));
+    private static readonly StageData stage0_0 = new StageData("level 0 - stage 0", 0, 0, scoreTier0, stage2elementalPower, notes0, GetItemDropsForStage(0, 0));
+    private static readonly StageData stage0_1 = new StageData("level 0 - stage 1", 0, 1, scoreTier0, stage1elementalPower, notes1, GetItemDropsForStage(0, 1));
+    private static readonly StageData stage0_2 = new StageData("level 0 - stage 2", 0, 2, scoreTier1, stage0elementalPower, notes1, GetItemDropsForStage(0, 2));
+    private static readonly StageData stage0_3 = new StageData("level 0 - stage 3", 0, 3, scoreTier1, stage1elementalPower, notes0, GetItemDropsForStage(0, 3));
+    private static readonly StageData stage0_4 = new StageData("level 0 - stage 4", 0, 4, scoreTier2, stage2elementalPower, notes1, GetItemDropsForStage(0, 4));
+    private static readonly StageData stage0_5 = new StageData("level 0 - stage 5", 0, 5, scoreTier2, stage2elementalPower, notes1, GetItemDropsForStage(0, 5));
 
-    private static readonly StageData stage1_0 = new StageData("level 1 - stage 0", 1, 0, scoreTier2, cardBonus1, notes0, GetItemDropsForStage(1, 0));
-    private static readonly StageData stage1_1 = new StageData("level 1 - stage 1", 1, 1, scoreTier2, cardBonus1, notes0, GetItemDropsForStage(1, 1));
-    private static readonly StageData stage1_2 = new StageData("level 1 - stage 2", 1, 2, scoreTier1, cardBonus2, notes0, GetItemDropsForStage(1, 2));
-    private static readonly StageData stage1_3 = new StageData("level 1 - stage 3", 1, 3, scoreTier1, cardBonus2, notes0, GetItemDropsForStage(1, 3));
-    private static readonly StageData stage1_4 = new StageData("level 1 - stage 4", 1, 4, scoreTier0, cardBonus0, notes1, GetItemDropsForStage(1, 4));
+    private static readonly StageData stage1_0 = new StageData("level 1 - stage 0", 1, 0, scoreTier2, stage2elementalPower, notes0, GetItemDropsForStage(1, 0));
+    private static readonly StageData stage1_1 = new StageData("level 1 - stage 1", 1, 1, scoreTier2, stage2elementalPower, notes0, GetItemDropsForStage(1, 1));
+    private static readonly StageData stage1_2 = new StageData("level 1 - stage 2", 1, 2, scoreTier1, stage1elementalPower, notes0, GetItemDropsForStage(1, 2));
+    private static readonly StageData stage1_3 = new StageData("level 1 - stage 3", 1, 3, scoreTier1, stage1elementalPower, notes0, GetItemDropsForStage(1, 3));
+    private static readonly StageData stage1_4 = new StageData("level 1 - stage 4", 1, 4, scoreTier0, stage0elementalPower, notes1, GetItemDropsForStage(1, 4));
 
     public static UserData CreateUser()
     {
@@ -237,43 +239,43 @@ public static class DataInitializer
         return new MetaData(level, stage, prerequisiteStageIds);
     }
 
-    private static List<ItemDrop> GetItemDropsForStage(int level, int stage)
+    private static List<StageItemDrop> GetItemDropsForStage(int level, int stage)
     {
         // TODO level design
-        List<ItemDrop> itemDrops = new List<ItemDrop>();
+        List<StageItemDrop> itemDrops = new List<StageItemDrop>();
         switch (level)
         {
             case 0:
                 switch (stage)
                 {
                     case 0:
-                        itemDrops.Add(new ItemDrop(item0, 0.1f));
-                        itemDrops.Add(new ItemDrop(item3, 0.3f));
-                        itemDrops.Add(new ItemDrop(item7, 0.7f));
+                        itemDrops.Add(new StageItemDrop(item0, 10));
+                        itemDrops.Add(new StageItemDrop(item3, 30));
+                        itemDrops.Add(new StageItemDrop(item7, 70));
                         break;
                     case 1:
-                        itemDrops.Add(new ItemDrop(item2, 0.7f));
-                        itemDrops.Add(new ItemDrop(item13, 0.8f));
-                        itemDrops.Add(new ItemDrop(item4, 0.1f));
-                        itemDrops.Add(new ItemDrop(item14, 0.1f));
+                        itemDrops.Add(new StageItemDrop(item2, 70));
+                        itemDrops.Add(new StageItemDrop(item13, 60));
+                        itemDrops.Add(new StageItemDrop(item4, 50));
+                        itemDrops.Add(new StageItemDrop(item14, 10));
                         break;
                     case 2:
-                        itemDrops.Add(new ItemDrop(item5, 0.4f));
-                        itemDrops.Add(new ItemDrop(item15, 0.3f));
-                        itemDrops.Add(new ItemDrop(item16, 0.7f));
-                        itemDrops.Add(new ItemDrop(item12, 0.1f));
+                        itemDrops.Add(new StageItemDrop(item5, 30));
+                        itemDrops.Add(new StageItemDrop(item15, 40));
+                        itemDrops.Add(new StageItemDrop(item16, 17));
+                        itemDrops.Add(new StageItemDrop(item12, 48));
                         break;
                     default:
-                        itemDrops.Add(new ItemDrop(item1, 1f));
-                        itemDrops.Add(new ItemDrop(item8, 0.5f));
-                        itemDrops.Add(new ItemDrop(item6, 0.1f));
+                        itemDrops.Add(new StageItemDrop(item1, 17));
+                        itemDrops.Add(new StageItemDrop(item8, 14));
+                        itemDrops.Add(new StageItemDrop(item6, 14));
                         break;
                 }
                 break;
             default:
-                itemDrops.Add(new ItemDrop(item9, 0.7f));
-                itemDrops.Add(new ItemDrop(item10, 0.2f));
-                itemDrops.Add(new ItemDrop(item11, 0.2f));
+                itemDrops.Add(new StageItemDrop(item9, 100));
+                itemDrops.Add(new StageItemDrop(item10, 1));
+                itemDrops.Add(new StageItemDrop(item11, 1));
                 break;
         }
 

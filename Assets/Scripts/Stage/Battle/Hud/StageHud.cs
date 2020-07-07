@@ -22,7 +22,7 @@ public class StageHud : MonoBehaviour
 
     void Start()
     {
-        // Cache the user and stage managers
+        // Cache the user and battle managers
         this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
         this.battleManager = ModelLocator.GetModelInstance<BattleManager>() as BattleManager;
 
@@ -38,7 +38,7 @@ public class StageHud : MonoBehaviour
         // Update score while stage is in session
         if (!this.isStageOver)
         {
-            float newScore = this.battleManager.GetScore();
+            float newScore = this.battleManager.RawScore;
             // Change score in HUD if needed
             if (this.score != newScore)
             {
@@ -47,16 +47,19 @@ public class StageHud : MonoBehaviour
             }
 
             // Check if stage is over
-            this.isStageOver = battleManager.IsStageOver();
+            this.isStageOver = this.battleManager.IsStageOver;
         }
-        else if (!this.ResultOverlay.activeInHierarchy)
+
+        // Stage is newly over with results in the battle manager
+        else if (!this.ResultOverlay.activeInHierarchy &&
+            this.battleManager.StageResult != null)
         {
-            // Stage is now over, get results from stage manager
-            List<ItemData> droppedItems = this.battleManager.GetDroppedItems();
+            // Get stage results
+            List<ItemData> items = this.battleManager.StageResult.DroppedItems;
 
             // Give results to user manager
             this.UpdateExperience();
-            this.userManager.GetUserData().AddItemsToInventory(droppedItems);
+            this.userManager.GetUserData().AddItemsToInventory(items);
 
             // Show result overlay
             this.ResultOverlay.SetActive(true);
@@ -81,8 +84,8 @@ public class StageHud : MonoBehaviour
 
     private void ClearCurrentStageData()
     {
-        // Tell stage manager to clear current stage data
-        this.battleManager.ClearStage();
+        // Tell battle manager it's safe to clear current stage data
+        this.battleManager.ClearCache();
     }
 
     // Show countdown overlay before stage begins
@@ -110,30 +113,38 @@ public class StageHud : MonoBehaviour
         }
         else
         {
-            // Disable countdown overlay and set to true isCountdownComplete in stage manager
+            // Disable countdown overlay
             this.CountdownOverlay.SetActive(false);
-            this.battleManager.SetCountdownComplete();
+
+            // Tell battle manager the countdown is complete
+            this.battleManager.IsCountdownComplete = true;
         }
     }
 
-    // Increment user and card experiences if score surpassed threshold
+    // Increment user experience if score surpassed threshold
     private void UpdateExperience()
     {
-        if (this.battleManager.GetMetaData().isComplete)
+        if (this.battleManager.MetaData.isComplete)
         {
             this.userManager.GetUserData().IncrementExperience();
         }
     }
 
-    // Show result overlay after stage ends
+    // Show results UI after TouchBoundary and EndBoundary have collided
     private void ShowResultOverlay()
     {
+        // Cache ResultOverlay UI component and stage data
         ResultOverlay resultOverlay = this.ResultOverlay.GetComponent<ResultOverlay>();
-        StageData stageData = this.battleManager.GetStageData();
+        StageData stageData = this.battleManager.StageData;
+
         // Show score tier
         int[] scoreTier = stageData.scoreTier;
         resultOverlay.DisplayScoreTier(this.score, scoreTier);
-        resultOverlay.DisplayItemDrops(this.battleManager.GetDroppedItems());
+
+        // Show dropped items
+        resultOverlay.DisplayItemDrops(this.battleManager.StageResult.DroppedItems);
+
+        // Turn on results UI
         this.ResultOverlay.SetActive(true);
     }
 }

@@ -13,10 +13,11 @@ public class EndBoundary : MonoBehaviour
     // Watch for stage completion
     private void OnTriggerEnter(Collider other)
     {
+        // If the TouchBoundary has reached this EndBoundary
         if (other.gameObject.GetComponent<TouchBoundary>())
         {
-            // The touch boundary has reached this end boundary, so tell stage manager the stage is over
-            this.battleManager.SetStageOver();
+            // Tell the battle manager to end the stage
+            this.battleManager.EndStage();
         }
     }
 }

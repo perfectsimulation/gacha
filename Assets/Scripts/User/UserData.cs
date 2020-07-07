@@ -10,7 +10,7 @@ public class UserData
     public List<CardData> cards = new List<CardData>();
     public List<ItemData> items = new List<ItemData>();
 
-    private CardData selectedCard;
+    public CardData SelectedCard { get; set; }
 
     public UserData() { }
 
@@ -64,17 +64,6 @@ public class UserData
         return this.cards;
     }
 
-    public void SetSelectedCardData(CardData cardData)
-    {
-        this.selectedCard = cardData;
-    }
-
-    public CardData GetSelectedCardData()
-    {
-        return this.selectedCard;
-        // TODO error handle when selectedCard is null
-    }
-
     public int GetCurrentLevel()
     {
         // Go through each meta to find the first one with isComplete = false
@@ -103,7 +92,7 @@ public class UserData
         return 1;
     }
 
-    public MetaData GetMetaDataById(int level, int stage)
+    public MetaData GetMetaData(int level, int stage)
     {
         string id = DataInitializer.FormatStageId(level, stage);
         foreach (MetaData data in this.metaData)
@@ -149,11 +138,11 @@ public class UserData
     private void IncrementCardExperience(float delta)
     {
         // Increment experience on selected card if one exists
-        if (this.selectedCard != null)
+        if (this.SelectedCard != null)
         {
             foreach (CardData card in this.cards)
             {
-                if (this.selectedCard.name == card.name)
+                if (this.SelectedCard.name == card.name)
                 {
                     card.IncrementExperience(delta);
                 }

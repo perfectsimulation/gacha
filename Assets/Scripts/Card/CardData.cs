@@ -11,13 +11,7 @@ public class CardData
     public int level;
     public int rarity;
     public int rank;
-    public int waterAffinity;
-    public int airAffinity;
-    public int hotAffinity;
-    public int coldAffinity;
-    public int hostAffinity;
-    public int detectability;
-    public int severity;
+    public ElementalPower elementalPower;
     public LevelRequirement[] levelReqs;
     public RankRequirement[] rankReqs;
 
@@ -28,16 +22,10 @@ public class CardData
         this.level = 1;
         this.rarity = 0;
         this.rank = 0;
-        this.waterAffinity = 0;
-        this.airAffinity = 0;
-        this.hotAffinity = 0;
-        this.coldAffinity = 0;
-        this.hostAffinity = 0;
-        this.detectability = 0;
-        this.severity = 0;
+        this.elementalPower = new ElementalPower();
     }
 
-    public CardData(string name, float experience, int rank, int rarity, int water, int air, int hot, int cold, int host, int detectability, int severity, LevelRequirement[] levelReqs, RankRequirement[] rankReqs)
+    public CardData(string name, float experience, int rarity, ElementalPower elementalPower, LevelRequirement[] levelReqs, RankRequirement[] rankReqs)
     {
         this.name = name;
         this.experience = experience;
@@ -46,13 +34,7 @@ public class CardData
         this.level = this.GetLevelFromExperience(experience);
         this.rank = this.GetRankFromLevel(this.level);
         this.rarity = rarity;
-        this.waterAffinity = water;
-        this.airAffinity = air;
-        this.hotAffinity = hot;
-        this.coldAffinity = cold;
-        this.hostAffinity = host;
-        this.detectability = detectability;
-        this.severity = severity;
+        this.elementalPower = elementalPower;
     }
 
     // Increments card experience and checks if card gained enough experience to level up
@@ -135,6 +117,30 @@ public class CardData
 
         // Should never execute
         return 1;
+    }
+}
+
+public class ElementalPower
+{
+    public int water;
+    public int air;
+    public int fire;
+    public int earth;
+
+    public ElementalPower()
+    {
+        this.water = 0;
+        this.air = 0;
+        this.fire = 0;
+        this.earth = 0;
+    }
+
+    public ElementalPower(int water, int air, int fire, int earth)
+    {
+        this.water = water;
+        this.air = air;
+        this.fire = fire;
+        this.earth = earth;
     }
 }
 

@@ -2,11 +2,20 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+// Created when the user selects a stage of a level in the AdventureMenu
 public class CardList : MonoBehaviour
 {
     public GameObject CardPreviewPrefab;
     public Transform FirstCardPreviewPosition;
     public Button ConfirmButton;
+
+    // Updated when the user chooses a card from the card list just before
+    // starting the stage
+    public CardData SelectedCard
+    {
+        get { return this.selectedCardData; }
+        set { this.selectedCardData = value; }
+    }
 
     private UserManager userManager;
 
@@ -15,15 +24,10 @@ public class CardList : MonoBehaviour
 
     void Start()
     {
-        // Cache the stage manager
+        // Cache the user manager
         this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
         this.cards = this.userManager.GetUserData().GetUserCards();
         this.ConfirmButton.interactable = false;
-    }
-
-    public CardData GetSelectedCardData()
-    {
-        return this.selectedCardData;
     }
 
     // Display all cards the user can select
@@ -56,6 +60,6 @@ public class CardList : MonoBehaviour
     private void SelectCard(int i)
     {
         this.ConfirmButton.interactable = true;
-        this.selectedCardData = this.cards[i];
+        this.SelectedCard = this.cards[i];
     }
 }

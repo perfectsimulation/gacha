@@ -54,13 +54,13 @@ public class AdventureMenu : MonoBehaviour
     public void ConfirmCardSelection()
     {
         // Add selected card data to user data
-        CardData cardData = this.CardList.GetComponent<CardList>().GetSelectedCardData();
-        this.userManager.GetUserData().SetSelectedCardData(cardData);
+        CardData cardData = this.CardList.GetComponent<CardList>().SelectedCard;
+        this.userManager.GetUserData().SelectedCard = cardData;
 
         // Dismiss card list
         this.CardList.SetActive(false);
 
-        // Show selected card data detail in this.SelectedCard
+        // Show selected card data detail UI
         this.SelectedCard.GetComponent<SelectedCard>().ShowSelectedCardDetail(cardData);
     }
 
@@ -69,13 +69,16 @@ public class AdventureMenu : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    // Set stage data in stage manager
+    // Set stage data and meta data in battle manager
     private void LoadStage(int stage)
     {
+        // TODO Get the data from database
         StageData stageData = DataInitializer.GetStageData(this.currentLevel, stage);
-        MetaData metaData = this.userManager.GetUserData().GetMetaDataById(this.currentLevel, stage);
-        this.battleManager.SetStageData(stageData);
-        this.battleManager.SetMetaData(metaData);
+        MetaData metaData = this.userManager.GetUserData().GetMetaData(this.currentLevel, stage);
+        this.battleManager.StageData = stageData;
+        this.battleManager.MetaData = metaData;
+
+        // Show card selection UI
         this.ShowCardSelectOverlay(true);
     }
 

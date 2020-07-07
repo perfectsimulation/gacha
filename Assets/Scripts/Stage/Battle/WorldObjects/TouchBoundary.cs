@@ -8,27 +8,17 @@ public class TouchBoundary : MonoBehaviour
     private List<BoxCollider> intersectingNotes = new List<BoxCollider>();
 
     private BattleManager battleManager;
-    private UserManager userManager;
 
-    private float scoreMultiplier = 1f;
-    private float scoreValue = 0f;
+    private int rawScore = 0;
     private bool isCountdownComplete = false;
-
-    private StageData stageData;
-    private CardData selectedCard;
 
     void Start()
     {
         // Cache the collider
         this.boxCollider = this.GetComponent<BoxCollider>();
 
-        // Cache the user and stage managers
+        // Cache the battle manager
         this.battleManager = ModelLocator.GetModelInstance<BattleManager>() as BattleManager;
-        this.userManager = ModelLocator.GetModelInstance<UserManager>() as UserManager;
-
-        this.stageData = this.battleManager.GetStageData();
-        this.selectedCard = this.userManager.GetUserData().GetSelectedCardData();
-        this.scoreMultiplier = this.CalculateScoreMultiplier(this.selectedCard);
     }
 
     void Update()
@@ -36,28 +26,35 @@ public class TouchBoundary : MonoBehaviour
         // Don't register touch input before stage countdown has completed
         if (!this.isCountdownComplete)
         {
-            // Ask stage manager if countdown is complete
-            this.isCountdownComplete = battleManager.IsCountdownComplete();
+            // Ask battle manager if countdown is complete
+            this.isCountdownComplete = this.battleManager.IsCountdownComplete;
             return;
         }
 
         // TODO: register user multi-touch input
+        // If there is a touch input
         if (Input.touchCount > 0)
         {
+            // Cast the touch to a ray
             Ray ray = this.mainCamera.ScreenPointToRay(Input.touches[0].position);
+
+            // Debug visual
             //Debug.DrawRay(ray.origin, ray.direction * 10f, Color.blue);
+
+            // If the ray intersects the collider of the TouchBoundary
             if (this.boxCollider.Raycast(ray, out RaycastHit hit, 100f))
             {
-                // The touch intersects the collider on the Boundary
-                // Now check if the touch intersects any Notes that are currently colliding with Boundary
+                // Check if the ray is also intersecting any Notes that are
+                // currently colliding with the TouchBoundary
                 foreach (BoxCollider collider in this.intersectingNotes)
                 {
+                    // If the ray intersects the collider of such a Note
                     if (collider.Raycast(ray, out RaycastHit collHit, 100f))
                     {
-                        // The touch intersects a Note that is currently colliding with the Boundary
-                        // Increase score while touch is held down and intersects both Boundary and Note
-                        this.scoreValue++;
-                        this.battleManager.SetScore(this.scoreValue * this.scoreMultiplier);
+                        // Increase the raw score while the touch is held and
+                        // the ray intersects both the TouchBoundary and Note
+                        this.rawScore++;
+                        this.battleManager.RawScore = this.rawScore;
                     }
                 }
             }
@@ -65,25 +62,7 @@ public class TouchBoundary : MonoBehaviour
 
     }
 
-    // Calculate score multiplier bonus from selected card
-    private float CalculateScoreMultiplier(CardData cardData)
-    {
-        // No score multiplier if no card was selected
-        if (cardData == null)
-        {
-            return 1f;
-        }
-
-        CardBonus cardBonus = this.stageData.cardBonus;
-        float waterBonus = cardData.waterAffinity * (1f + cardBonus.waterX);
-        float airBonus = cardData.airAffinity * (1f + cardBonus.airX);
-        float hotBonus = cardData.hotAffinity * (1f + cardBonus.hotX);
-        float coldBonus = cardData.coldAffinity * (1f + cardBonus.coldX);
-        float totalBonus = waterBonus + airBonus + hotBonus + coldBonus;
-        return totalBonus / 4f;
-    }
-
-    // Add colliding Notes to cache
+    // Add colliding Note to cache
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<Note>())

@@ -7,21 +7,21 @@ public class StageData
     public int level;
     public int stage;
     public int[] scoreTier;
-    public CardBonus cardBonus;
+    public ElementalPower elementalPower;
     public List<NoteData> notes;
-    public List<ItemDrop> itemDrops;
+    public List<StageItemDrop> stageItemDrops;
 
     public StageData() { }
 
-    public StageData(string description, int level, int stage, int[] scoreTier, CardBonus cardBonus, List<NoteData> notes, List<ItemDrop> itemDrops)
+    public StageData(string description, int level, int stage, int[] scoreTier, ElementalPower elementalPower, List<NoteData> notes, List<StageItemDrop> stageItemDrops)
     {
         this.description = description;
         this.level = level;
         this.stage = stage;
         this.scoreTier = scoreTier;
-        this.cardBonus = cardBonus;
+        this.elementalPower = elementalPower;
         this.notes = notes;
-        this.itemDrops = itemDrops;
+        this.stageItemDrops = stageItemDrops;
     }
 
     public StageData(SerializedStageData serializedData)
@@ -30,9 +30,9 @@ public class StageData
         this.level = serializedData.level;
         this.stage = serializedData.stage;
         this.scoreTier = serializedData.scoreTier;
-        this.cardBonus = serializedData.cardBonus;
+        this.elementalPower = serializedData.elementalPower;
         this.notes = Serializer.ListFromArray<NoteData>(serializedData.notes);
-        this.itemDrops = Serializer.ListFromArray<ItemDrop>(serializedData.itemDrops);
+        this.stageItemDrops = Serializer.ListFromArray<StageItemDrop>(serializedData.stageItemDrops);
     }
 }
 
@@ -43,9 +43,9 @@ public class SerializedStageData
     public int level;
     public int stage;
     public int[] scoreTier;
-    public CardBonus cardBonus;
+    public ElementalPower elementalPower;
     public NoteData[] notes;
-    public ItemDrop[] itemDrops;
+    public StageItemDrop[] stageItemDrops;
 
     public SerializedStageData() { }
 
@@ -55,9 +55,9 @@ public class SerializedStageData
         this.level = stageData.level;
         this.stage = stageData.stage;
         this.scoreTier = stageData.scoreTier;
-        this.cardBonus = stageData.cardBonus;
+        this.elementalPower = stageData.elementalPower;
         this.notes = Serializer.ListToArray(stageData.notes);
-        this.itemDrops = Serializer.ListToArray(stageData.itemDrops);
+        this.stageItemDrops = Serializer.ListToArray(stageData.stageItemDrops);
     }
 }
 
@@ -122,32 +122,6 @@ public class SerializedMetaData
 }
 
 [Serializable]
-public class CardBonus
-{
-    // Score multipliers of Card properties
-    public float waterX;
-    public float airX;
-    public float hotX;
-    public float coldX;
-
-    public CardBonus()
-    {
-        this.waterX = 0f;
-        this.airX = 0f;
-        this.hotX = 0f;
-        this.coldX = 0f;
-    }
-
-    public CardBonus(float water, float air, float hot, float cold)
-    {
-        this.waterX = water;
-        this.airX = air;
-        this.hotX = hot;
-        this.coldX = cold;
-    }
-}
-
-[Serializable]
 public class NoteData
 {
     public float xPosition;
@@ -165,12 +139,12 @@ public class NoteData
 }
 
 [Serializable]
-public class ItemDrop
+public class StageItemDrop
 {
     public ItemData item;
-    public float dropChance;
+    public int dropChance;
 
-    public ItemDrop(ItemData item, float dropChance)
+    public StageItemDrop(ItemData item, int dropChance)
     {
         this.item = item;
         this.dropChance = dropChance;

@@ -34,7 +34,7 @@ public class StageCameraController : MonoBehaviour
         if (!this.isCountdownComplete)
         {
             // Ask stage manager if countdown is complete
-            this.isCountdownComplete = battleManager.IsCountdownComplete();
+            this.isCountdownComplete = this.battleManager.IsCountdownComplete;
             return;
         }
 
@@ -42,7 +42,7 @@ public class StageCameraController : MonoBehaviour
         if (!this.isStageOver)
         {
             this.mainCameraTransform.Translate(mainCameraForwardVector);
-            this.isStageOver = battleManager.IsStageOver();
+            this.isStageOver = this.battleManager.IsStageOver;
             return;
         }
 

@@ -11,7 +11,7 @@ public class Stanza : MonoBehaviour
     {
         // Stage data has been loaded and cached in BattleManager
         this.battleManager = ModelLocator.GetModelInstance<BattleManager>() as BattleManager;
-        this.BuildStanza(this.battleManager.GetStageData());
+        this.BuildStanza(this.battleManager.StageData);
     }
 
     // Layout the stage by instantiating Note prefabs from NoteData
