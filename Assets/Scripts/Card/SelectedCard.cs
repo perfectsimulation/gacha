@@ -12,7 +12,7 @@ public class SelectedCard : MonoBehaviour
         // TODO: Prefill with recommended card
     }
 
-    public void ShowSelectedCardDetail(CardData cardData)
+    public void ShowSelectedCardDetail(Card card)
     {
         // Disable Add text on button
         this.SelectedCardButton.GetComponentInChildren<TextMeshProUGUI>().enabled = false;

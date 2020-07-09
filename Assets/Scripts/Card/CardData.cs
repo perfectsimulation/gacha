@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 [Serializable]
-public class CardData
+public class Card
 {
     // TODO: implement level and experience
     // TODO: design interesting properties - placeholder values for now
@@ -15,7 +15,7 @@ public class CardData
     public LevelRequirement[] levelReqs;
     public RankRequirement[] rankReqs;
 
-    public CardData()
+    public Card()
     {
         this.name = "card";
         this.experience = 0f;
@@ -25,7 +25,7 @@ public class CardData
         this.elementalPower = new ElementalPower();
     }
 
-    public CardData(string name, float experience, int rarity, ElementalPower elementalPower, LevelRequirement[] levelReqs, RankRequirement[] rankReqs)
+    public Card(string name, float experience, int rarity, ElementalPower elementalPower, LevelRequirement[] levelReqs, RankRequirement[] rankReqs)
     {
         this.name = name;
         this.experience = experience;

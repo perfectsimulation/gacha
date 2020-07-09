@@ -11,16 +11,16 @@ public class CardList : MonoBehaviour
 
     // Updated when the user chooses a card from the card list just before
     // starting the stage
-    public CardData SelectedCard
+    public Card SelectedCard
     {
-        get { return this.selectedCardData; }
-        set { this.selectedCardData = value; }
+        get { return this.selectedCard; }
+        set { this.selectedCard = value; }
     }
 
     private UserManager userManager;
 
-    private List<CardData> cards;
-    private CardData selectedCardData;
+    private List<Card> cards;
+    private Card selectedCard;
 
     void Start()
     {
@@ -52,8 +52,8 @@ public class CardList : MonoBehaviour
             cardPreview.transform.SetParent(this.FirstCardPreviewPosition);
             cardPreview.transform.localPosition = new Vector3(i * spacing, 0);
 
-            // Add CardData to CardPreview component
-            cardPreview.GetComponent<CardPreview>().SetCardData(this.cards[i]);
+            // Add Card to CardPreview component
+            cardPreview.GetComponent<CardPreview>().SetCard(this.cards[i]);
         }
     }
 

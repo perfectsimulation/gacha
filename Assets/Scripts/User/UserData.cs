@@ -7,10 +7,10 @@ public class UserData
     public int playerLevel = 0;
     public float experience = 0f;
     public List<MetaData> metaData = new List<MetaData>();
-    public List<CardData> cards = new List<CardData>();
+    public List<Card> cards = new List<Card>();
     public List<ItemData> items = new List<ItemData>();
 
-    public CardData SelectedCard { get; set; }
+    public Card SelectedCard { get; set; }
 
     public UserData() { }
 
@@ -27,7 +27,7 @@ public class UserData
             this.metaData.Add(meta);
         }
 
-        this.cards = Serializer.ListFromArray<CardData>(serializedUserData.cards);
+        this.cards = Serializer.ListFromArray<Card>(serializedUserData.cards);
         this.items = Serializer.ListFromArray<ItemData>(serializedUserData.items);
     }
 
@@ -54,12 +54,12 @@ public class UserData
         this.username = username;
     }
 
-    public void SetCardData(List<CardData> cardData)
+    public void SetCard(List<Card> card)
     {
-        this.cards = cardData;
+        this.cards = card;
     }
 
-    public List<CardData> GetUserCards()
+    public List<Card> GetUserCards()
     {
         return this.cards;
     }
@@ -140,7 +140,7 @@ public class UserData
         // Increment experience on selected card if one exists
         if (this.SelectedCard != null)
         {
-            foreach (CardData card in this.cards)
+            foreach (Card card in this.cards)
             {
                 if (this.SelectedCard.name == card.name)
                 {
@@ -209,7 +209,7 @@ public class SerializedUserData
     public int playerLevel = 0;
     public float experience = 0f;
     public SerializedMetaData[] metaData = new SerializedMetaData[] { };
-    public CardData[] cards;
+    public Card[] cards;
     public ItemData[] items = new ItemData[] { };
 
     public SerializedUserData() { }
@@ -232,9 +232,9 @@ public class SerializedUserData
 
         // Get card array from card list
         int cardCount = userData.cards.Count;
-        CardData[] cards = new CardData[cardCount];
+        Card[] cards = new Card[cardCount];
         int cardIndex = 0;
-        foreach (CardData card in userData.cards)
+        foreach (Card card in userData.cards)
         {
             cards[cardIndex] = card;
             cardIndex++;

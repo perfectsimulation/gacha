@@ -71,8 +71,8 @@ public static class DataInitializer
     private static readonly RankRequirement card1rankReq1 = new RankRequirement(2, 7, new List<ItemData> { item11, item13, item14 });
     private static readonly ElementalPower elementalPower0 = new ElementalPower(1000, 0, 0, 0);
     private static readonly ElementalPower elementalPower1 = new ElementalPower(0, 100, 100, 100);
-    private static readonly CardData card0 = new CardData("big red", 0f, 100, elementalPower0, card0LevelReqs, new RankRequirement[] { card0rankReq0 });
-    private static readonly CardData card1 = new CardData("jungle boi", 0f, 100, elementalPower1, card1LevelReqs, new RankRequirement[] { card1rankReq0, card1rankReq1 });
+    private static readonly Card card0 = new Card("big red", 0f, 100, elementalPower0, card0LevelReqs, new RankRequirement[] { card0rankReq0 });
+    private static readonly Card card1 = new Card("jungle boi", 0f, 100, elementalPower1, card1LevelReqs, new RankRequirement[] { card1rankReq0, card1rankReq1 });
 
     private static readonly StageData stage0_0 = new StageData("level 0 - stage 0", 0, 0, scoreTier0, stage2elementalPower, notes0, GetItemDropsForStage(0, 0));
     private static readonly StageData stage0_1 = new StageData("level 0 - stage 1", 0, 1, scoreTier0, stage1elementalPower, notes1, GetItemDropsForStage(0, 1));
@@ -94,7 +94,7 @@ public static class DataInitializer
         user.experience = 0f;
         user.playerLevel = GetPlayerLevelByExperience(0f);
         user.metaData = CreateMetaDataList();
-        user.cards = new List<CardData> { card0, card1 };
+        user.cards = new List<Card> { card0, card1 };
         user.items = new List<ItemData>();
         return user;
     }
@@ -163,7 +163,7 @@ public static class DataInitializer
 
     public static void InitializeCardLibrary()
     {
-        // Create all new CardData
+        // Create all new Card
         // Save it to local device
     }
 

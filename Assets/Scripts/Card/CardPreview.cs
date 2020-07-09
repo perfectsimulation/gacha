@@ -2,10 +2,10 @@
 
 public class CardPreview : MonoBehaviour
 {
-    public CardData cardData;
+    public Card card;
 
-    public void SetCardData(CardData cardData)
+    public void SetCard(Card card)
     {
-        this.cardData = cardData;
+        this.card = card;
     }
 }

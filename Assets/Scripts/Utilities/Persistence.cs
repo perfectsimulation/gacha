@@ -5,7 +5,7 @@ using UnityEngine;
 public static class Persistence
 {
     private static UserData userData;
-    private static List<CardData> cardLibrary;
+    private static List<Card> cardLibrary;
 
     private static readonly string userDataPath = "UserData.json";
     private static readonly string cardLibraryPath = "CardLibrary.txt";
@@ -41,7 +41,7 @@ public static class Persistence
         return new SerializedUserData();
     }
 
-    public static void SaveCardLibrary(List<CardData> cards)
+    public static void SaveCardLibrary(List<Card> cards)
     {
         // Cache card library
         cardLibrary = cards;
@@ -50,12 +50,12 @@ public static class Persistence
         File.WriteAllText(cardLibraryPath, cards.ToString());
     }
 
-    public static List<CardData> LoadCardLibrary()
+    public static List<Card> LoadCardLibrary()
     {
         string serializedCardLibrary = File.ReadAllText(cardLibraryPath);
 
         Debug.Log(serializedCardLibrary);
-        return new List<CardData>();
+        return new List<Card>();
     }
 
     private static bool DoesFileExistAtPath(string path)

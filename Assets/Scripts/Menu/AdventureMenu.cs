@@ -54,14 +54,14 @@ public class AdventureMenu : MonoBehaviour
     public void ConfirmCardSelection()
     {
         // Add selected card data to user data
-        CardData cardData = this.CardList.GetComponent<CardList>().SelectedCard;
-        this.userManager.GetUserData().SelectedCard = cardData;
+        Card card = this.CardList.GetComponent<CardList>().SelectedCard;
+        this.userManager.GetUserData().SelectedCard = card;
 
         // Dismiss card list
         this.CardList.SetActive(false);
 
         // Show selected card data detail UI
-        this.SelectedCard.GetComponent<SelectedCard>().ShowSelectedCardDetail(cardData);
+        this.SelectedCard.GetComponent<SelectedCard>().ShowSelectedCardDetail(card);
     }
 
     public void StartStage()
